@@ -20,18 +20,6 @@ const Post = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
 
 
-//temporary var
-  const liked=true;
-
-
-
-  // const { isLoading, error, data } = useQuery(["likes", post.id], () =>
-  //   makeRequest.get("/likes?postId=" + post.id).then((res) => {
-  //     return res.data;
-  //   })
-  // );
-
-
   const { isLoading, error, data } = useQuery({
     queryKey: ["likes", post.Pid],
     queryFn: () => makeRequest.get(`/likes?postId=${post.Pid}`).then(res => res.data),

@@ -71,5 +71,32 @@
        margin: auto;
       }
     }
+
+
+    .deleteButton {
+      position: absolute;
+      top: 10px; // Position it at the top
+      right: 10px; // Position it at the right
+      color: white; // Text color
+      background-color: red; // Button background color
+      border: none;
+      border-radius: 50%; // Circular button
+      width: 25px; // Smaller width
+      height: 25px; // Smaller height
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px; // Smaller font size for icon or text
+  
+      @include mobile {
+        top: 5px;
+        right: 5px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+
   }
 }
