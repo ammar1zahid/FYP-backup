@@ -22,10 +22,10 @@ const Navbar = () => {
         <Link to="/test" style={{ textDecoration: "none" }}>
           <span>WeConnect</span>
         </Link>
-        {/* <Link to="/test">
+        <Link to="/test">
           <HomeOutlinedIcon style={{ color: 'inherit', textDecoration: 'none' }} />
-        </Link> */}
-        <HomeOutlinedIcon/>
+        </Link>
+        {/* <HomeOutlinedIcon/> */}
         {darkMode ? (
           <WbSunnyOutlinedIcon onClick={toggle} />
         ) : (
@@ -45,8 +45,8 @@ const Navbar = () => {
         <div className="user">
           <img
             // src="https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600"
-            // src={"/upload/" + currentUser.profilePic}
-             src={ currentUser.profilePic}
+             src={"/upload/" + currentUser.profilePic}
+            //  src={ currentUser.profilePic}
             alt=""
           />
           {/* <span>Ammar</span> */}

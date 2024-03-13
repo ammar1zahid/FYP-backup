@@ -48,9 +48,7 @@ const Post = ({ post }) => {
     },
   });
   
-
-
-
+// updated post
 
   const deleteMutation = useMutation({
     mutationFn: (Pid) => {
@@ -67,14 +65,14 @@ const handleDelete = () => {
 };
 
   const handleLike = () => {
-    console.log("in like func")
     console.log(currentUser.id)
     mutation.mutate(data.includes(currentUser.id));
   };
 
-  // const handleDelete = () => {
-  //   deleteMutation.mutate(post.id);
-  // };
+  
+    // Check if media is available
+    const mediaCheck = post.img;
+
 
   return (
     <div className="post">
@@ -83,6 +81,7 @@ const handleDelete = () => {
           <div className="userInfo">
             <img src={"/upload/"+post.profilePic} alt="" />
             {/* <img src={post.profilePic} alt="" /> */}
+
             <div className="details">
               <Link
                  to={`/profile/${post.Puserid}`}
@@ -94,6 +93,7 @@ const handleDelete = () => {
               <span className="date">{moment(post.createdAt).fromNow()}</span>
               {/* <span className="date">1 min ago</span> */}
             </div>
+
           </div>
           {/* <MoreHorizIcon  /> */}
            <MoreHorizIcon onClick={() => {setMenuOpen(!menuOpen)
@@ -106,9 +106,25 @@ const handleDelete = () => {
         <div className="content">
     
           <p>{post.Postdesc}</p>
-
-          <img src={"/upload/" + post.img} alt="" />
           
+
+          {/* <img src={"/upload/" + post.img} alt="" /> */}
+          
+
+          {/* Render the media section if media is available */}
+          {mediaCheck && (
+            <div>
+              {mediaCheck.endsWith('.jpg') || mediaCheck.endsWith('.png') || mediaCheck.endsWith('.jpeg') ? (
+                <img src={`/upload/${mediaCheck}`} alt="Image" />
+              ) : (
+                <video controls>
+                  <source src={`/upload/${mediaCheck}`} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              )}
+            </div>
+          )}
+
         </div>
         <div className="info">
           <div className="item">
@@ -125,12 +141,6 @@ const handleDelete = () => {
               />
             )}
             {data?.length} Likes
-
-        {/* {liked ? <FavoriteOutlinedIcon/> : <FavoriteBorderOutlinedIcon/>}  */}
-
-        {/* {liked ? <FavoriteOutlinedIcon style={{ color: "red" }}/> : <FavoriteBorderOutlinedIcon/>}  */}
-        
-
 
           </div>
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
