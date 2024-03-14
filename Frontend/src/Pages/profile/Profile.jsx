@@ -111,6 +111,7 @@ const handleFollow = () => {
           </div>
           
           <div className="profileContainer">
+
             <div className="uInfo">
               <div className="left">
               {/* https://www.facebook.com/ */}
@@ -171,6 +172,44 @@ const handleFollow = () => {
                 <MoreVertIcon />
               </div>
             </div>
+
+            <div className="cvSection">
+  <h2 className="cvSectionTitle">Curriculum Vitae</h2>
+  
+  <div className="cvCategory">
+    <h3>Education</h3>
+    <ul>
+      <li>Bachelor of Science in Computer Science - University Name, Year</li>
+      // Add more education items here
+    </ul>
+  </div>
+
+  <div className="cvCategory">
+    <h3>Experience</h3>
+    <ul>
+      <li>Software Developer at Company Name, Year-Present</li>
+      // Add more experience items here
+    </ul>
+  </div>
+
+  <div className="cvCategory">
+    <h3>Skills</h3>
+    <ul>
+      <li>React, JavaScript, Node.js</li>
+      // Add more skills here
+    </ul>
+  </div>
+
+  <div className="cvCategory">
+    <h3>Achievements</h3>
+    <ul>
+      <li>Winner of Coding Hackathon, Year</li>
+      // Add more achievements here
+    </ul>
+  </div>
+</div>
+
+            <br />
             <Posts Puserid={userId} />
           {/* <Posts/> */}
           

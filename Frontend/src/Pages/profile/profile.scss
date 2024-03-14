@@ -122,6 +122,53 @@
           gap: 10px;
         }
       }
+
+
+      .cvSection {
+        padding: 20px;
+        // background-color: themed("bgLight");
+        background-color: themed("bg");
+        color: themed("textColor");
+        border-radius: 20px;
+        margin-top: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      
+        .cvSectionTitle {
+          text-align: center;
+          font-size: 24px;
+          margin-bottom: 20px;
+        }
+      
+        .cvCategory {
+          margin-bottom: 20px;
+      
+          h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+          }
+      
+          ul {
+            list-style: none;
+            padding: 0;
+      
+            li {
+              margin-bottom: 5px;
+              padding-left: 20px;
+              position: relative;
+      
+              &:before {
+                content: "•";
+                color: themed("primaryColor");
+                position: absolute;
+                left: 0;
+              }
+            }
+          }
+        }
+      }
+      
+
+
     }
   }
 }
