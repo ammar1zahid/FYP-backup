@@ -3,9 +3,9 @@ import Login from './Pages/login/Login';
 import Register from './Pages/register/Register'
 import Test from './Pages/Test';
 import ProfilePage from './Pages/ProfilePage';
-// import { CartProvider } from './context/ContextReducer';
-// import Home from './Pages/home/Home';
-// import Profile from './Pages/profile/Profile';
+import Messenger from './Pages/MessengerPage';
+
+
 
 
 
@@ -24,6 +24,7 @@ function App() {
           <Route path="/register" element={<Register/>}></Route>  
           <Route path="/test" element={<Test/>}></Route>  
           <Route path="/profile/:userId" element={<ProfilePage/>}></Route>
+          <Route path="/messenger" element={<Messenger/>}></Route>
 
 
         </Routes>
