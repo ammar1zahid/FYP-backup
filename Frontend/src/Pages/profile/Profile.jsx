@@ -16,6 +16,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
 import { useState } from "react";
+import "./profilecv.css"
 
 const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
@@ -93,6 +94,39 @@ const handleFollow = () => {
   // const handleFollow = () => {
   //   mutation.mutate(relationshipData.includes(currentUser.id));
   // };
+
+
+  // cv functionality related code
+
+   // Existing states and hooks
+   const [cvData, setCvData] = useState({
+    education: '',
+    experience: '',
+    skills: '',
+    // Add more fields as necessary
+  });
+
+  // Function to handle changes in the form inputs
+  const handleCvChange = (e) => {
+    const { name, value } = e.target;
+    setCvData(prevCvData => ({
+      ...prevCvData,
+      [name]: value,
+    }));
+  };
+
+  // Function to handle form submission
+  const handleCvSubmit = (e) => {
+    e.preventDefault();
+    // Perform the API call to save the CV data
+    // You might need to adapt this part based on your backend setup
+    console.log(cvData);
+  };
+
+
+
+// cv functionality related code
+
 
   return (
     <div className="profile">
@@ -182,7 +216,43 @@ const handleFollow = () => {
      
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}
 
+
+      <div className="cvContainer">
+  <h2 className="cvTitle">Curriculum Vitae</h2>
+  <div className="cvContent">
+    <div className="personalInfo">
+      <h3>Personal Information</h3>
+      <p><strong>Name:</strong> John Doe</p>
+      <p><strong>Email:</strong> john.doe@example.com</p>
+      <p><strong>Profession:</strong> Software Developer</p>
     </div>
+    <div className="experienceSection">
+      <h3>Experience</h3>
+      <ul>
+        <li>Senior Developer at XYZ Corp - 2019-present</li>
+        <li>Mid-Level Developer at ABC Inc - 2015-2019</li>
+      </ul>
+    </div>
+    <div className="educationSection">
+      <h3>Education</h3>
+      <ul>
+        <li>BSc in Computer Science from University of Somewhere - 2011-2015</li>
+        <li>High School Diploma from Some High School - 2007-2011</li>
+      </ul>
+    </div>
+    <div className="skillsSection">
+      <h3>Skills</h3>
+      <p>Programming Languages: JavaScript, Python, Java</p>
+      <p>Frameworks: React, Angular, Django</p>
+      <p>Tools: Docker, Git, Jenkins</p>
+    </div>
+  </div>
+</div>
+
+
+
+    </div> // entire profile page div
+    
   );
 };
 

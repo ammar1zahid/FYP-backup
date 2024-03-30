@@ -1,0 +1,42 @@
+.cvContainer {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-top: 30px;
+    border-radius: 8px;
+  }
+  
+  .cvTitle {
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 24px;
+  }
+  
+  .cvContent div {
+    margin-bottom: 20px;
+  }
+  
+  .cvContent h3 {
+    margin-bottom: 10px;
+    color: #007bff;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 5px;
+  }
+  
+  .cvContent p,
+  .cvContent li {
+    line-height: 1.6;
+    color: #666;
+  }
+  
+  .cvContent ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .cvContent .skillsSection p {
+    margin: 5px 0;
+  }
+  

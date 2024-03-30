@@ -32,6 +32,8 @@ export const register = (req, res) => {
   });
 };
 
+
+
 export const login = (req, res) => {
   const q = "SELECT * FROM users WHERE username = ?";
 
@@ -60,6 +62,9 @@ export const login = (req, res) => {
   });
 
 };
+
+
+
 
 export const logout = (req, res) => {
   res.clearCookie("accessToken",{
