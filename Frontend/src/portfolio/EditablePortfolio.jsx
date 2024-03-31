@@ -6,6 +6,7 @@ import './vendor/simple-line-icons/css/simple-line-icons.css'
 import './css/resume.min.css'
 import "./img/profile.jpg"
 import AboutP from './editableComponents/AboutP.jsx'
+import ExperienceP from './editableComponents/ExperienceP.jsx'
 
 
 function EditablePortfolio() {
@@ -215,7 +216,7 @@ function EditablePortfolio() {
   
   
       {/* EXPERIENCE SECTION */}
-      <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
+      {/* <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
         <div className="my-auto">
           <h2 className="mb-5">Experience</h2>
           <div className="resume-item d-flex flex-column flex-md-row mb-5">
@@ -259,7 +260,10 @@ function EditablePortfolio() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
+
+      <ExperienceP />
+
       {/* EXPERIENCE SECTION */}
   
   

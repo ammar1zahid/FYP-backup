@@ -45,7 +45,7 @@ const handleGenerateIcon = () => {
             <i className="fa fa-facebook fa-stack-1x fa-inverse" />
           </span>
         </a>
-        {/* <button style={{backgroundColor: "red"}} onClick={() => handleRemoveIcon(newLink)}>X</button> */}
+        
       </li>
     );
   }
@@ -58,7 +58,7 @@ const handleGenerateIcon = () => {
             <i className="fa fa-twitter fa-stack-1x fa-inverse" />
           </span>
         </a>
-        {/* <button style={{backgroundColor: "red"}} onClick={() => handleRemoveIcon(newLink)}>X</button> */}
+        
       </li>
     );
   }  
@@ -71,7 +71,7 @@ const handleGenerateIcon = () => {
             <i className="fa fa-github fa-stack-1x fa-inverse" />
           </span>
         </a>
-        {/* <button style={{backgroundColor: "red"}} onClick={() => handleRemoveIcon(newLink)}>X</button> */}
+        
       </li>
     );
   }
@@ -84,7 +84,7 @@ const handleGenerateIcon = () => {
           <i className="fa fa-linkedin fa-stack-1x fa-inverse" />
         </span>
       </a>
-      {/* <button style={{backgroundColor: "red"}} onClick={() => handleRemoveIcon(newLink)}>X</button> */}
+      
     </li>
   );
 }
@@ -115,7 +115,7 @@ const handleGenerateIcon = () => {
       </h1>
 {/* NAME */}
 
-      {/* if else logic keh if empty from db then placeholder otherwise db data */}
+
 
 {/* ADDRESS EMAIL NUM ETC */}
       <div className="subheading mb-5">
@@ -139,16 +139,13 @@ const handleGenerateIcon = () => {
 {/* ADDRESS EMAIL NUM ETC */}
 
 
-{/* ABOUT MYSELF TUTAL PUTAL*/}
+{/* ABOUT MYSELF */}
       <p className="mb-5">
-
-      {/* I am experienced in leveraging agile frameworks to provide a robust synopsis for high level overviews.  */}
-      {/* Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition. */}
       
       <input type="text" name='aboutParagraph' placeholder='About Myself' style={{ border: 'none' }}/>
       
       </p>
-{/* ABOUT MYSELF TUTAL PUTAL*/}
+{/* ABOUT MYSELF */}
 
 
 
@@ -166,9 +163,7 @@ const handleGenerateIcon = () => {
     <ul className="list-inline list-social-icons mb-0">
       {/* Display all generated icons */}
       {socialLinks.map((link) => (
-        // <React.Fragment key={link.url}>
-        //   {link.icon}
-        // </React.Fragment>
+
         <li className="list-inline-item" key={link.url}>
           {link.icon}
           <button style={{backgroundColor: "red"}} onClick={() => handleRemoveIcon(link.url)}>
