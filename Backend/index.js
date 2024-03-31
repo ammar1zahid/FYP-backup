@@ -11,6 +11,7 @@ import relationshipRoutes from "./routes/relationships.js";
  import cookieParser from "cookie-parser";
 import storiesRoutes from "./routes/storiesRoutes.js"
 import cvRoutes from "./routes/cv.js"
+import $ from 'jquery';
 
 //middlewares
 

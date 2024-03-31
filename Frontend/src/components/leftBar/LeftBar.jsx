@@ -13,6 +13,7 @@ import Tutorials from "../../assets/11.png";
 import Courses from "../../assets/12.png";
 import Fund from "../../assets/13.png";
 import cvicon from "../../assets/cvicon.png"
+import portfolioIcon from "../../assets/portfoliosmol.png"
 import { AuthContext } from "../../context/authContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
@@ -74,6 +75,16 @@ const LeftBar = () => {
 
           {/* ADDING THE LINK TO CV PAGE HERE */}
 
+
+          <div className="item">
+            {/* <img src={Friends} alt="" /> */}
+            <img src={portfolioIcon} alt="" />
+            
+            <Link to={"/PortfolioPage"} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <span>Portfolio</span>
+            </Link>
+            
+          </div>
 
 
 

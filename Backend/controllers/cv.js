@@ -42,6 +42,7 @@ export const addCVData = (req, res) => {
 };
 
 
+
 export const getCVData = (req, res) => {
   // Query to fetch all CV data from the database
   const q = 'SELECT * FROM cvdata';
