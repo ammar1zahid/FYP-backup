@@ -166,7 +166,7 @@ const handleGenerateIcon = () => {
 
         <li className="list-inline-item" key={link.url}>
           {link.icon}
-          <button style={{backgroundColor: "red"}} onClick={() => handleRemoveIcon(link.url)}>
+          <button onClick={() => handleRemoveIcon(link.url)} style={{backgroundColor: "red", fontSize: "10px"}}>
             X
           </button>
         </li>

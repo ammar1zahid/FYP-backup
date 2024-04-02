@@ -1,62 +1,147 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import './vendor/bootstrap/css/bootstrap.min.css'
 import './vendor/font-awesome/css/font-awesome.min.css'
 import './vendor/devicons/css/devicons.min.css'
 import './vendor/simple-line-icons/css/simple-line-icons.css'
 import './css/resume.min.css'
 import "./img/profile.jpg"
+
+// import "./vendor/bootstrap/js/bootstrap.bundle.min.js"
+
+
+import { Unstable_Popup as BasePopup } from '@mui/base/Unstable_Popup';
+import { styled } from '@mui/system';
+
+
 import AboutP from './editableComponents/AboutP.jsx'
 import ExperienceP from './editableComponents/ExperienceP.jsx'
+import EducationP from './editableComponents/EducationP.jsx'
+import SkillsP from './editableComponents/SkillsP.jsx'
+import InterestsP from './editableComponents/InterestsP.jsx'
+import AwardsP from './editableComponents/AwardsP.jsx'
+import CertificationsP from './editableComponents/CertificationsP.jsx'
+
+import "./popupbox.css"
+
+const grey = {
+  50: '#F3F6F9',
+  100: '#E5EAF2',
+  200: '#DAE2ED',
+  300: '#C7D0DD',
+  400: '#B0B8C4',
+  500: '#9DA8B7',
+  600: '#6B7A90',
+  700: '#434D5B',
+  800: '#303740',
+  900: '#1C2025',
+};
+
+const blue = {
+  200: '#99CCFF',
+  300: '#66B2FF',
+  400: '#3399FF',
+  500: '#007FFF',
+  600: '#0072E5',
+  700: '#0066CC',
+};
+
+const PopupBody = styled('div')(
+  ({ theme }) => `
+  width: max-content;
+  padding: 12px 16px;
+  margin: 8px;
+  border-radius: 8px;
+  border: 1px solid ${theme.palette.mode === 'dark' ? grey[700] : grey[200]};
+  background-color: ${theme.palette.mode === 'dark' ? grey[900] : '#fff'};
+  box-shadow: ${
+    theme.palette.mode === 'dark'
+      ? `0px 4px 8px rgb(0 0 0 / 0.7)`
+      : `0px 4px 8px rgb(0 0 0 / 0.1)`
+  };
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  z-index: 1;
+`,
+);
+
+const Button = styled('button')(
+  ({ theme }) => `
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  background-color: ${blue[500]};
+  padding: 8px 16px;
+  border-radius: 8px;
+  color: white;
+  transition: all 150ms ease;
+  cursor: pointer;
+  border: 1px solid ${blue[500]};
+  box-shadow: 0 2px 4px ${
+    theme.palette.mode === 'dark' ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 127, 255, 0.5)'
+  }, inset 0 1.5px 1px ${blue[400]}, inset 0 -2px 1px ${blue[600]};
+
+  &:hover {
+    background-color: ${blue[600]};
+  }
+
+  &:active {
+    background-color: ${blue[700]};
+    box-shadow: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 4px ${theme.palette.mode === 'dark' ? blue[300] : blue[200]};
+    outline: none;
+  }
+
+  &.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    box-shadow: none;
+    &:hover {
+      background-color: ${blue[500]};
+    }
+  }
+`,
+);
+
+
+
 
 
 function EditablePortfolio() {
 
 
-    
-    // const [portfolioData, setPortfolioData] = useState({
-    //     h1about: '',
-    //     line1about: '',
-    //     line2about: '',
-    //     line3about: '',
-    //     line4about: '',
-    //     line5about: '',
-    //     line6about: '',
-    //     imgabout: ''
-    //   });
+  // const [anchor, setAnchor] = React.useState(null);
 
-    //   useEffect(() => {
-    //     // Fetch data from the backend when the component mounts
-    //     axios.get('http://localhost:5000/api/about')
-    //     .then(response => {
-    //       const { h1about, line1about, line2about, line3about, line4about, line5about, line6about, imgabout } = response.data;
-    //       setaboutFormData({ h1about, line1about, line2about, line3about, line4about, line5about, line6about, imgabout });
-    //     })
-    //       .catch(error => {
-    //         console.error('about Error fetching data:', error);
-    //       });
-    //   }, []); // Empty dependency array ensures this effect runs only once, when the component mounts
-    
-    
-    //   const handleChange = e => {
-    //     setaboutFormData({ ...aboutformData, [e.target.name]: e.target.value });
-    //   };
-    
-    
-    //   const handleSubmit = e => {
-    //     e.preventDefault();
-    //     // Handle form submission and update data in the backend
-    //     axios.put('http://localhost:5000/api/about', aboutformData)
-    //       .then(response => {
-    //         console.log('about Data updated successfully');
-    //       })
-    //       .catch(error => {
-    //         console.error('about Error updating data:', error);
-    //       });
-    //   };
+  // const handleClick = (event) => {
+  //   setAnchor(anchor ? null : event.currentTarget);
+  // };
+
+  // const open = Boolean(anchor);
+  // const id = open ? 'simple-popup' : undefined;
 
 
+  // const [selectedSection, setSelectedSection] = useState(null);
 
 
+  const [open, setOpen] = useState(false);
+  const [navItems, setNavItems] = useState([]);
+  const id = open ? 'popup-body' : undefined;
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
+  const handleAddNavItem = (item) => {
+    // Add item to navbar only if it's not already added
+    if (!navItems.includes(item)) {
+      setNavItems([...navItems, item]);
+      console.log(`Adding ${item} to the navbar`);
+    }
+  };
 
   return (
     
@@ -83,8 +168,10 @@ function EditablePortfolio() {
     {/* Custom styles for this template */}
     <link href="css/resume.min.css" rel="stylesheet" />
     
-    {/* side nav bar */}
-    <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+    {/* SIDE NAVBAR COMPLETE DIV */}
+    
+    <nav className="navbar navbar-expand-lg navbar-dark bg-primary " id="sideNav">
+    {/* <nav className="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav"> */}
   
       <a className="navbar-brand js-scroll-trigger" href="#page-top">
         {/* <span className="d-block d-lg-none">Start Bootstrap</span> */}
@@ -99,35 +186,21 @@ function EditablePortfolio() {
         </span>
       </a>
   
-      <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      {/* <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon" />
-      </button>
+      </button> */}
   
   
       {/* sidebar components div */}
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+{/* ojdcoaejfcawjemipf */}
+
+{/* GOOOODDD COODDEEEEEEEEEEEEEEEEEEE */}
+      {/* <div className="collapse navbar-collapse" id="navbarSupportedContent">
         <ul className="navbar-nav">
   
-{/* 
-        <Link to="" className={`nav-item nav-link ${isLinkActive('/About') ? 'active' : ''}`}>
-          <input type="text" name="about" value={navformData.about} onChange={handleChange} style={{ width: '100px' }}/> */}
-            {/* {navData.about} */}
-          {/* </Link> */}
-  
           <li className="nav-item">
-            <a className="nav-link js-scroll-trigger" href="#about" 
-            // <a className="nav-link js-scroll-trigger" href="#about" 
-
-            >
-                
-                About
-                {/* <input type="text" name='about'/> */}
-            
-            </a>
-
-            {/* <input type="text"  name="about" className="nav-link js-scroll-trigger" href="#about" /> */}
-            
-          </li>
+            <a className="nav-link js-scroll-trigger" href="#about">About</a>
+            </li>
   
           <li className="nav-item">
             <a className="nav-link js-scroll-trigger" href="#experience">Experience</a>
@@ -148,278 +221,132 @@ function EditablePortfolio() {
           <li className="nav-item">
             <a className="nav-link js-scroll-trigger" href="#awards">Awards</a>
           </li>
+
+          <li className="nav-item">
+            <a className="nav-link js-scroll-trigger" href="#certifications">Certifications</a>
+          </li>
   
   
         </ul>
+      </div> */}
+{/* GOOOODDD COODDEEEEEEEEEEEEEEEEEEE */}
+
+
+
+<div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul className="navbar-nav">
+
+
+{/* <div>
+      <Button aria-describedby={id} type="button" onClick={handleClick}>
+        Toggle Popup
+      </Button>
+      <BasePopup id={id} open={open} anchor={anchor}>
+        <PopupBody>
+          <button>Experience + </button> <button>Education + </button>
+          <p></p>
+          <button>Skills + </button> <button>Interests + </button>
+        </PopupBody>
+      </BasePopup>
+    </div> */}
+
+<li className="nav-item">
+            <a className="nav-link js-scroll-trigger" href="#about">About</a>
+            </li>
+
+
+<div>
+      <Button aria-describedby={id} type="button" onClick={handleClick}>
+        Toggle Popup
+      </Button>
+      <BasePopup id={id} open={open} anchor={null}>
+        <PopupBody>
+          <button onClick={() => handleAddNavItem('Experience')}>Experience +</button>
+          <button onClick={() => handleAddNavItem('Education')}>Education +</button>
+          <p></p>
+          <button onClick={() => handleAddNavItem('Skills')}>Skills +</button>
+          <button onClick={() => handleAddNavItem('Interests')}>Interests +</button>
+        </PopupBody>
+      </BasePopup>
+
+      <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul className="navbar-nav">
+          {navItems.map((item, index) => (
+            <li key={index} className="nav-item">
+              <a className="nav-link js-scroll-trigger" href={`#${item}`}>{item}</a>
+            </li>
+          ))}
+        </ul>
       </div>
+      
+      
+
+      
+    </div>
+      
+
+
+
+
+    </ul>
+    </div>
+
+
+
+
+
+{/* kjdwofnjwnjewhf */}
       {/* sidebar components div */}
   
   
+
     </nav>
+  {/* SIDE NAVBAR COMPLETE DIV */}
   
   
+<AboutP />
   
-    <div className="container-fluid p-0"> {/* MAIN BIG DIV*/}
-  
-  
-  
-      {/* ABOUT SECTION */}
-      {/* <section className="resume-section p-3 p-lg-5 d-flex d-column" id="about">
-        <div className="my-auto">
-          <h1 className="mb-0">Clarence
-            <span className="text-primary">Taylor</span>
-          </h1>
-          <div className="subheading mb-5">3542 Berry Street · Cheyenne Wells, CO 80810 · (317) 585-8468 ·
-            <a href="mailto:name@email.com">name@email.com</a>
-          </div>
-          <p className="mb-5">I am experienced in leveraging agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition.</p>
-          <ul className="list-inline list-social-icons mb-0">
-            <li className="list-inline-item">
-              <a href="#">
-                <span className="fa-stack fa-lg">
-                  <i className="fa fa-circle fa-stack-2x" />
-                  <i className="fa fa-facebook fa-stack-1x fa-inverse" />
-                </span>
-              </a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">
-                <span className="fa-stack fa-lg">
-                  <i className="fa fa-circle fa-stack-2x" />
-                  <i className="fa fa-twitter fa-stack-1x fa-inverse" />
-                </span>
-              </a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">
-                <span className="fa-stack fa-lg">
-                  <i className="fa fa-circle fa-stack-2x" />
-                  <i className="fa fa-linkedin fa-stack-1x fa-inverse" />
-                </span>
-              </a>
-            </li>
-            <li className="list-inline-item">
-              <a href="#">
-                <span className="fa-stack fa-lg">
-                  <i className="fa fa-circle fa-stack-2x" />
-                  <i className="fa fa-github fa-stack-1x fa-inverse" />
-                </span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section> */}
+    <div className="container-fluid p-0"> 
+    
+    {navItems.includes('Experience') && (
+        <section id="experience">
+          {/* <h2>Experience Section</h2> */}
+          <ExperienceP />
+          {/* Add your content for Experience section */}
+        </section>
+      )}
 
-      <AboutP />
-      {/* ABOUT SECTION */}
-  
-  
-  
-      {/* EXPERIENCE SECTION */}
-      {/* <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
-        <div className="my-auto">
-          <h2 className="mb-5">Experience</h2>
-          <div className="resume-item d-flex flex-column flex-md-row mb-5">
-            <div className="resume-content mr-auto">
-              <h3 className="mb-0">Senior Web Developer</h3>
-              <div className="subheading mb-3">Intelitec Solutions</div>
-              <p>Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.</p>
-            </div>
-            <div className="resume-date text-md-right">
-              <span className="text-primary">March 2013 - Present</span>
-            </div>
-          </div>
-          <div className="resume-item d-flex flex-column flex-md-row mb-5">
-            <div className="resume-content mr-auto">
-              <h3 className="mb-0">Web Developer</h3>
-              <div className="subheading mb-3">Intelitec Solutions</div>
-              <p>Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.</p>
-            </div>
-            <div className="resume-date text-md-right">
-              <span className="text-primary">December 2011 - March 2013</span>
-            </div>
-          </div>
-          <div className="resume-item d-flex flex-column flex-md-row mb-5">
-            <div className="resume-content mr-auto">
-              <h3 className="mb-0">Junior Web Designer</h3>
-              <div className="subheading mb-3">Shout! Media Productions</div>
-              <p>Podcasting operational change management inside of workflows to establish a framework. Taking seamless key performance indicators offline to maximise the long tail. Keeping your eye on the ball while performing a deep dive on the start-up mentality to derive convergence on cross-platform integration.</p>
-            </div>
-            <div className="resume-date text-md-right">
-              <span className="text-primary">July 2010 - December 2011</span>
-            </div>
-          </div>
-          <div className="resume-item d-flex flex-column flex-md-row">
-            <div className="resume-content mr-auto">
-              <h3 className="mb-0">Web Design Intern</h3>
-              <div className="subheading mb-3">Shout! Media Productions</div>
-              <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>
-            </div>
-            <div className="resume-date text-md-right">
-              <span className="text-primary">September 2008 - June 2010</span>
-            </div>
-          </div>
-        </div>
-      </section> */}
+      {navItems.includes('Education') && (
+        <section id="education">
+          {/* <h2>Education Section</h2> */}
+          <EducationP />
+          {/* Add your content for Education section */}
+        </section>
+      )}
 
-      <ExperienceP />
+      {navItems.includes('Skills') && (
+        <section id="skills">
+          {/* <h2>Skills Section</h2> */}
+          <SkillsP />
+          {/* Add your content for Skills section */}
+        </section>
+      )}
 
-      {/* EXPERIENCE SECTION */}
+      {navItems.includes('Interests') && (
+        <section id="interests">
+          {/* <h2>Interests Section</h2> */}
+          <InterestsP />
+          {/* Add your content for Interests section */}
+        </section>
+      )}
   
-  
-  
-  
-      {/* EDUCATION SECTION */}
-      <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="education">
-        <div className="my-auto">
-          <h2 className="mb-5">Education</h2>
-          <div className="resume-item d-flex flex-column flex-md-row mb-5">
-            <div className="resume-content mr-auto">
-              <h3 className="mb-0">University of Colorado Boulder</h3>
-              <div className="subheading mb-3">Bachelor of Science</div>
-              <div>Computer Science - Web Development Track</div>
-              <p>GPA: 3.23</p>
-            </div>
-            <div className="resume-date text-md-right">
-              <span className="text-primary">August 2006 - May 2010</span>
-            </div>
-          </div>
-          <div className="resume-item d-flex flex-column flex-md-row">
-            <div className="resume-content mr-auto">
-              <h3 className="mb-0">James Buchanan High School</h3>
-              <div className="subheading mb-3">Technology Magnet Program</div>
-              <p>GPA: 3.56</p>
-            </div>
-            <div className="resume-date text-md-right">
-              <span className="text-primary">August 2002 - May 2006</span>
-            </div>
-          </div>
-        </div>
-      </section>
-      {/* EDUCATION SECTION */}
-  
-  
-  
-  
-      {/* SKILLS SECTION */}
-      <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="skills">
-        <div className="my-auto">
-          <h2 className="mb-5">Skills</h2>
-          <div className="subheading mb-3">Programming Languages &amp; Tools</div>
-          <ul className="list-inline list-icons">
-            <li className="list-inline-item">
-              <i className="devicons devicons-html5" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-css3" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-javascript" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-jquery" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-sass" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-less" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-bootstrap" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-wordpress" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-grunt" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-gulp" />
-            </li>
-            <li className="list-inline-item">
-              <i className="devicons devicons-npm" />
-            </li>
-          </ul>
-          <div className="subheading mb-3">Workflow</div>
-          <ul className="fa-ul mb-0">
-            <li>
-              <i className="fa-li fa fa-check" />
-              Mobile-First, Responsive Design</li>
-            <li>
-              <i className="fa-li fa fa-check" />
-              Cross Browser Testing &amp; Debugging</li>
-            <li>
-              <i className="fa-li fa fa-check" />
-              Cross Functional Teams</li>
-            <li>
-              <i className="fa-li fa fa-check" />
-              Agile Development &amp; Scrum</li>
-          </ul>
-        </div>
-      </section>
-      {/* SKILLS SECTION */}
-  
-  
-  
-  
-      {/* INTERESTS SECTION */}
-      <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="interests">
-        <div className="my-auto">
-          <h2 className="mb-5">Interests</h2>
-          <p>Apart from being a web developer, I enjoy most of my time being outdoors. In the winter, I am an avid skiier and novice ice climber. During the warmer months here in Colorado, I enjoy mountain biking, free climbing, and kayaking.</p>
-          <p className="mb-0">When forced indoors, I follow a number of sci-fi and fantasy genre movies and television shows, I am an aspiring chef, and I spend a large amount of my free time exploring the latest technolgy advancements in the front-end web development world.</p>
-        </div>
-      </section>
-      {/* INTERESTS SECTION */}
-  
-  
-  
-  
-      {/* AWARDS AND CERTIFICATIONS SECTION */}
-      <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="awards">
-        <div className="my-auto">
-          <h2 className="mb-5">Awards &amp; Certifications</h2>
-          <ul className="fa-ul mb-0">
-            <li>
-              <i className="fa-li fa fa-trophy text-warning" />
-              Google Analytics Certified Developer</li>
-            <li>
-              <i className="fa-li fa fa-trophy text-warning" />
-              Mobile Web Specialist - Google Certification</li>
-            <li>
-              <i className="fa-li fa fa-trophy text-warning" />
-              1<sup>st</sup>
-              Place - University of Colorado Boulder - Emerging Tech Competition 2009</li>
-            <li>
-              <i className="fa-li fa fa-trophy text-warning" />
-              1<sup>st</sup>
-              Place - University of Colorado Boulder - Adobe Creative Jam 2008 (UI Design Category)</li>
-            <li>
-              <i className="fa-li fa fa-trophy text-warning" />
-              2<sup>nd</sup>
-              Place - University of Colorado Boulder - Emerging Tech Competition 2008</li>
-            <li>
-            </li><li>
-              <i className="fa-li fa fa-trophy text-warning" />
-              1<sup>st</sup>
-              Place - James Buchanan High School - Hackathon 2006</li>
-            <li>
-              <i className="fa-li fa fa-trophy text-warning" />
-              3<sup>rd</sup>
-              Place - James Buchanan High School - Hackathon 2005</li>
-          </ul>
-        </div>
-      </section>
-      {/* AWARDS AND CERTIFICATIONS SECTION */}
-  
-  
-  
-  
-  
-    </div> {/* MAIN BIG DIV */}
+    </div> 
+    {/* MAIN BIG DIV */}
+
+
     
   
+
     {/* Bootstrap core JavaScript */}
       <script src="vendor/jquery/jquery.min.js"></script>
       <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -437,3 +364,5 @@ function EditablePortfolio() {
 }
 
 export default EditablePortfolio
+
+

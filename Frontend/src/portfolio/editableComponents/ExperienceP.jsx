@@ -50,7 +50,7 @@ function ExperienceP() {
     
    
 
-<section className="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
+<section className="resume-section p-3 p-lg-5 d-flex flex-column" id="Experience">
 
 <div className="my-auto">
 
