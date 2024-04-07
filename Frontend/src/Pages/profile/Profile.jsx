@@ -21,32 +21,35 @@ const Profile = () => {
   const [openUpdate, setOpenUpdate] = useState(false);
   const { currentUser } = useContext(AuthContext);
 
-   const userId = parseInt(useLocation().pathname.split("/")[2]);
- 
- 
+  const userId = parseInt(useLocation().pathname.split("/")[2]);
 
   const { isLoading, error, data } = useQuery({
-    queryKey: ["user", userId], 
-    
-    queryFn: () => makeRequest.get(`/users/find/${userId}`)
-            .then(res => res.data)
-            .catch(error => {
-                console.error("Error fetching data:", error);
-                throw error; // This makes sure errors are handled by `error` in useQuery.
-            }),
+    queryKey: ["user", userId],
 
+    queryFn: () =>
+      makeRequest
+        .get(`/users/find/${userId}`)
+        .then((res) => res.data)
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          throw error; // This makes sure errors are handled by `error` in useQuery.
+        }),
   });
-  
 
-
-  const { isLoading: rIsLoading, error: rError, data: relationshipData } = useQuery({
+  const {
+    isLoading: rIsLoading,
+    error: rError,
+    data: relationshipData,
+  } = useQuery({
     queryKey: ["relationship", userId],
-    queryFn: () => makeRequest.get(`/relationships?followeduserid=${userId}`).then(res => res.data),
+    queryFn: () =>
+      makeRequest
+        .get(`/relationships?followeduserid=${userId}`)
+        .then((res) => res.data),
     onError: (error) => {
       console.error("Error fetching relationship data:", error);
-    }
+    },
   });
-  
 
   const queryClient = useQueryClient();
 
@@ -64,15 +67,12 @@ const Profile = () => {
       queryClient.invalidateQueries(["relationship"]);
     },
   });
-  
 
-const handleFollow = () => {
-  // Determine if the current user is already followed by checking if their ID is included in relationshipData
+  const handleFollow = () => {
+    // Determine if the current user is already followed by checking if their ID is included in relationshipData
 
-  mutation.mutate(relationshipData.includes(currentUser.id));
-};
-
-
+    mutation.mutate(relationshipData.includes(currentUser.id));
+  };
 
   //  const queryClient = useQueryClient();
 
@@ -90,31 +90,29 @@ const handleFollow = () => {
   //   }
   // );
 
-  // const handleFollow = () => {
-  //   mutation.mutate(relationshipData.includes(currentUser.id));
-  // };
-
   return (
     <div className="profile">
       {isLoading ? (
         "loading"
       ) : (
         <>
-
           <div className="images">
             {/* <img src="https://images.pexels.com/photos/133633/pexels-photo-133633.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" className="cover" /> */}
             {/* <img src="https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="" className="profilePic" /> */}
-             <img src={"/upload/"+data.coverPic} alt="" className="cover" />
-             {/* <img src={data.coverPic} alt="" className="cover" /> */}
-            <img src={"/upload/"+data.profilePic} alt="" className="profilePic" /> 
+            <img src={"/upload/" + data.coverPic} alt="" className="cover" />
+            {/* <img src={data.coverPic} alt="" className="cover" /> */}
+            <img
+              src={"/upload/" + data.profilePic}
+              alt=""
+              className="profilePic"
+            />
             {/* <img src={data.profilePic} alt="" className="profilePic" />  */}
           </div>
-          
-          <div className="profileContainer">
 
+          <div className="profileContainer">
             <div className="uInfo">
               <div className="left">
-              {/* https://www.facebook.com/ */}
+                {/* https://www.facebook.com/ */}
                 <a href="http://facebook.com">
                   <FacebookTwoToneIcon fontSize="large" />
                 </a>
@@ -133,10 +131,9 @@ const handleFollow = () => {
               </div>
 
               <div className="center">
-                
                 {/* <span>Ammar </span> */}
                 <span>{data.name}</span>
-                
+
                 <div className="info">
                   <div className="item">
                     <PlaceIcon />
@@ -151,21 +148,16 @@ const handleFollow = () => {
                 </div>
                 {rIsLoading ? (
                   "loading"
-                ) :
-                 userId === currentUser.id ? (
-                  
-                   <button onClick={() => setOpenUpdate(true)}>update</button>
-                  // <button >update</button>
+                ) : userId === currentUser.id ? (
+                  <button onClick={() => setOpenUpdate(true)}>update</button>
                 ) : (
-
-            
+                  // <button >update</button>
                   <button onClick={handleFollow}>
                     {relationshipData.includes(currentUser.id)
                       ? "Following"
                       : "Follow"}
                   </button>
                 )}
-               
               </div>
               <div className="right">
                 <EmailOutlinedIcon />
@@ -173,54 +165,53 @@ const handleFollow = () => {
               </div>
             </div>
 
-            <div className="cvSection">
-  <h2 className="cvSectionTitle">Curriculum Vitae</h2>
-  
-  <div className="cvCategory">
-    <h3>Education</h3>
-    <ul>
-      <li>Bachelor of Science in Computer Science - University Name, Year</li>
-      // Add more education items here
-    </ul>
-  </div>
+            {/* <div className="cvSection">
+              <h2 className="cvSectionTitle">Curriculum Vitae</h2>
 
-  <div className="cvCategory">
-    <h3>Experience</h3>
-    <ul>
-      <li>Software Developer at Company Name, Year-Present</li>
-      // Add more experience items here
-    </ul>
-  </div>
+              <div className="cvCategory">
+                <h3>Education</h3>
+                <ul>
+                  <li>
+                    Bachelor of Science in Computer Science - University Name,
+                    Year
+                  </li>
+                  // Add more education items here
+                </ul>
+              </div>
 
-  <div className="cvCategory">
-    <h3>Skills</h3>
-    <ul>
-      <li>React, JavaScript, Node.js</li>
-      // Add more skills here
-    </ul>
-  </div>
+              <div className="cvCategory">
+                <h3>Experience</h3>
+                <ul>
+                  <li>Software Developer at Company Name, Year-Present</li>
+                  // Add more experience items here
+                </ul>
+              </div>
 
-  <div className="cvCategory">
-    <h3>Achievements</h3>
-    <ul>
-      <li>Winner of Coding Hackathon, Year</li>
-      // Add more achievements here
-    </ul>
-  </div>
-</div>
+              <div className="cvCategory">
+                <h3>Skills</h3>
+                <ul>
+                  <li>React, JavaScript, Node.js</li>
+                  // Add more skills here
+                </ul>
+              </div>
+
+              <div className="cvCategory">
+                <h3>Achievements</h3>
+                <ul>
+                  <li>Winner of Coding Hackathon, Year</li>
+                  // Add more achievements here
+                </ul>
+              </div>
+            </div> */}
 
             <br />
             <Posts Puserid={userId} />
-          {/* <Posts/> */}
-          
+            {/* <Posts/> */}
           </div>
-        
         </>
-        )}
+      )}
 
-     
       {openUpdate && <Update setOpenUpdate={setOpenUpdate} user={data} />}
-
     </div>
   );
 };

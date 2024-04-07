@@ -19,10 +19,10 @@ const Navbar = () => {
   return (
     <div className="navbar">
       <div className="left">
-        <Link to="/test" style={{ textDecoration: "none" }}>
+        <Link to="/studentHome" style={{ textDecoration: "none" }}>
           <span>WeConnect</span>
         </Link>
-        <Link to="/test">
+        <Link to="/studentHome">
           <HomeOutlinedIcon style={{ color: 'inherit', textDecoration: 'none' }} />
         </Link>
         {/* <HomeOutlinedIcon/> */}

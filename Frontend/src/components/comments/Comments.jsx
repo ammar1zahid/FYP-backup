@@ -9,6 +9,7 @@ const Comments = ({ postId }) => {
    const [Cdesc, setDesc] = useState("");
   const { currentUser } = useContext(AuthContext);
 
+console.log("current user from comment",currentUser)
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["comments"],
@@ -17,7 +18,7 @@ const Comments = ({ postId }) => {
      enabled: !!postId, // This line ensures the query only runs if postId is truthy
   });
 
-  console.log("data is:",data)
+ 
 
 
   const queryClient = useQueryClient();

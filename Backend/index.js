@@ -10,6 +10,11 @@ import relationshipRoutes from "./routes/relationships.js";
  import multer from "multer";
  import cookieParser from "cookie-parser";
 import storiesRoutes from "./routes/storiesRoutes.js"
+import messagesRoutes from "./routes/messagesRoutes.js"
+import conversationsRoutes from "./routes/conversationsRoutes.js"
+
+
+
 //middlewares
 
 app.use((req, res, next) => {
@@ -69,6 +74,8 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
  app.use("/api/likes", likeRoutes);
  app.use("/api/relationships", relationshipRoutes);
  app.use("/api/stories", storiesRoutes);
+ app.use("/api/messages", messagesRoutes);
+ app.use("/api/conversations", conversationsRoutes);
 
 app.listen(8800, () => {
   console.log("API working!");

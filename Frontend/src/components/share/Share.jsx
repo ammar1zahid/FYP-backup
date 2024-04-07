@@ -31,7 +31,7 @@ const Share = () => {
   const mutation = useMutation({
     mutationFn: (newPost) => makeRequest.post("/posts", newPost),
     onSuccess: () => {
-      queryClient.invalidateQueries(['posts']);
+      queryClient.invalidateQueries('posts');
     },
   });
 
