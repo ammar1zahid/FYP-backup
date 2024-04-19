@@ -32,7 +32,7 @@ const io = require("socket.io")(8900, {
     console.log("a user connected.");
   
 
-    // //take userId and socketId from user
+    // //take userId and socketId from client(user)
     socket.on("addUser", (userId) => {
       addUser(userId, socket.id);
       io.emit("getUsers", users);
@@ -46,6 +46,16 @@ const io = require("socket.io")(8900, {
       io.to(user.socketId).emit("getMessage", {
         senderId,
         text,
+      });
+    });
+
+
+    //notifications
+    socket.on("sendNotification", ({ senderId, receiverId, type }) => {
+      const receiver = getUser(receiverId);
+      io.to(receiver.socketId).emit("getNotification", {
+        senderId,
+        type,
       });
     });
   

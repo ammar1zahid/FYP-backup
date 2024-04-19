@@ -8,14 +8,45 @@ import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import { Link } from "react-router-dom";
-import { useContext } from "react";
+import { useContext, useEffect ,useRef,useState } from "react";
 import { DarkModeContext } from "../../context/darkModeContext";
 import { AuthContext } from "../../context/authContext";
+import SearchBar from "../searchbar/SearchBar";
+import { io } from "socket.io-client";
+
+//{socket}
 
 const Navbar = () => {
    const { toggle, darkMode } = useContext(DarkModeContext);
    const { currentUser } = useContext(AuthContext);
 
+   
+   const [notifications, setNotifications] = useState([]);
+   const [open, setOpen] = useState(false);
+
+     const socket = useRef();
+
+
+    useEffect(() => {
+
+      if (socket.current) {
+        socket.current.on("getNotification", (data) => {
+          setNotifications((prev) => [...prev, data]);
+        });
+      }
+      console.log("notifications:",notifications)
+    }, [socket.current]);
+    
+    
+
+    
+    // useEffect(() => {
+
+
+    //   console.log("notifications:",notifications)
+    // }, [notifications]);
+
+   
   return (
     <div className="navbar">
       <div className="left">
@@ -33,16 +64,48 @@ const Navbar = () => {
         )}
         {/* <DarkModeOutlinedIcon /> */}
         <GridViewOutlinedIcon />
-        <div className="search">
-          <SearchOutlinedIcon />
-          <input type="text" placeholder="Search..." />
+
+        <div>
+          {/* <SearchOutlinedIcon />
+          <input type="text" placeholder="Search..." /> */}
+          <SearchBar/>
         </div>
+
       </div>
       <div className="right">
-        <PersonOutlinedIcon />
-        <EmailOutlinedIcon />
-        <NotificationsOutlinedIcon />
+        {/* <PersonOutlinedIcon /> */}
+
+        {/* <EmailOutlinedIcon /> */}
+
+        {/* <NotificationsOutlinedIcon /> */}
+
+      
+      <div className="icons">
+        
+        <div className="icon" onClick={() => setOpen(!open)}>
+          <div className="iconImg">
+            <NotificationsOutlinedIcon />
+          </div>
+            {/* {notifications.length > 0 && ( */}
+              <div className="counter">2</div>
+              {/* <div className="counter">{notifications.length}</div> */}
+            {/* )} */}  
+        </div>
+
+        <div className="icon" onClick={() => setOpen(!open)}>
+          <div className="iconImg">
+            <EmailOutlinedIcon />
+          </div>
+            {/* {notifications.length > 0 && ( */}
+              <div className="counter">2</div>
+              {/* <div className="counter">{notifications.length}</div> */}
+            {/* )} */}  
+        </div>
+
+      </div>    
+
         <div className="user">
+        {/* <Link  to={"/profile/" + currentUser.id} style={{ textDecoration: "none", color: "inherit" }} > */}
           <img
             // src="https://images.pexels.com/photos/3228727/pexels-photo-3228727.jpeg?auto=compress&cs=tinysrgb&w=1600"
              src={"/upload/" + currentUser.profilePic}
@@ -51,6 +114,7 @@ const Navbar = () => {
           />
           {/* <span>Ammar</span> */}
           <span>{currentUser.name}</span>
+        {/* </Link>   */}
         </div>
       </div>
     </div>

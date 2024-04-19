@@ -6,27 +6,43 @@ import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
-import { useState } from "react";
 import moment from "moment";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import { useContext } from "react";
+import { useContext,useRef  ,useState, useEffect} from "react";
 import { AuthContext } from "../../context/authContext";
+import { io } from "socket.io-client";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
+  const socket = useRef();
 
+  useEffect(() => {
+    // Initialize the socket connection when the component mounts
+    socket.current = io("ws://localhost:8900");
+
+    // Cleanup function to disconnect the socket when the component unmounts
+    return () => {
+      if (socket.current) {
+        socket.current.disconnect();
+      }
+    };
+ }, []);
+ 
+  // useEffect(() => {
+  //   socket.current = io("ws://localhost:8900");      
+  // }, []);
 
   const { isLoading, error, data } = useQuery({
     queryKey: ["likes", post.Pid],
-    queryFn: () => makeRequest.get(`/likes?postId=${post.Pid}`).then(res => res.data),
-    
+    queryFn: () =>
+      makeRequest.get(`/likes?postId=${post.Pid}`).then((res) => res.data),
   });
-  
-// console.log("post id is:",post.Pid)
+
+  // console.log("post id is:",post.Pid)
   // console.log("data is:",data)
 
   const queryClient = useQueryClient();
@@ -47,44 +63,66 @@ const Post = ({ post }) => {
       queryClient.invalidateQueries(["likes"]);
     },
   });
-  
-// updated post
+
+  // updated post
 
   const deleteMutation = useMutation({
     mutationFn: (Pid) => {
-        return makeRequest.delete(`/posts/`+ Pid);
+      return makeRequest.delete(`/posts/` + Pid);
     },
     onSuccess: () => {
-  
       queryClient.invalidateQueries(["posts"]);
     },
-});
+  });
 
-const handleDelete = () => {
-  deleteMutation.mutate(post.Pid);
-};
+  const handleDelete = () => {
+    deleteMutation.mutate(post.Pid);
+  };
 
-  const handleLike = () => {
-    console.log(currentUser.id)
+
+  const handleLike = (type) => {
+    //console.log(currentUser.id);
+  
+      if (socket.current) {
+        socket.current.emit("sendNotification", {
+          senderId: currentUser.id,
+          receiverId: post.Puserid,
+          type: 1,
+        });
+      } else {
+        console.error("Socket not initialized");
+      }
+    
     mutation.mutate(data.includes(currentUser.id));
   };
 
-  
-    // Check if media is available
-    const mediaCheck = post.img;
+  // Check if media is available
+  const mediaCheck = post.img;
+
+
+  // const handleNotification = (type) => {
+  //   type === 1 
+  //   socket.emit("sendNotification", {
+  //     senderName: user,
+  //     receiverName: post.username,
+  //     type,
+  //   });
+  // };
+
 
 
   return (
     <div className="post">
       <div className="container">
+
         <div className="user">
           <div className="userInfo">
-            <img src={"/upload/"+post.profilePic} alt="" />
+            <img src={"/upload/" + post.profilePic} alt="" />
             {/* <img src={post.profilePic} alt="" /> */}
 
             <div className="details">
               <Link
-                 to={`/profile/${post.Puserid}`}
+                to={`/profile/${post.Puserid}`}
                 //to={'/profile/'}
                 style={{ textDecoration: "none", color: "inherit" }}
               >
@@ -93,28 +131,29 @@ const handleDelete = () => {
               <span className="date">{moment(post.createdAt).fromNow()}</span>
               {/* <span className="date">1 min ago</span> */}
             </div>
-
           </div>
           {/* <MoreHorizIcon  /> */}
-           <MoreHorizIcon onClick={() => {setMenuOpen(!menuOpen)
-          
-          }} />
+          <MoreHorizIcon
+            onClick={() => {
+              setMenuOpen(!menuOpen);
+            }}
+          />
           {menuOpen && post.Puserid === currentUser.id && (
             <button onClick={handleDelete}>delete</button>
-          )} 
+          )}
         </div>
+
         <div className="content">
-    
           <p>{post.Postdesc}</p>
-          
 
           {/* <img src={"/upload/" + post.img} alt="" /> */}
-          
 
           {/* Render the media section if media is available */}
           {mediaCheck && (
             <div>
-              {mediaCheck.endsWith('.jpg') || mediaCheck.endsWith('.png') || mediaCheck.endsWith('.jpeg') ? (
+              {mediaCheck.endsWith(".jpg") ||
+              mediaCheck.endsWith(".png") ||
+              mediaCheck.endsWith(".jpeg") ? (
                 <img src={`/upload/${mediaCheck}`} alt="Image" />
               ) : (
                 <video controls>
@@ -124,7 +163,6 @@ const handleDelete = () => {
               )}
             </div>
           )}
-
         </div>
         <div className="info">
           <div className="item">
@@ -136,15 +174,13 @@ const handleDelete = () => {
                 onClick={handleLike}
               />
             ) : (
-              <FavoriteBorderOutlinedIcon 
-               onClick={handleLike} 
-              />
+              <FavoriteBorderOutlinedIcon onClick={handleLike} />
             )}
             {data?.length} Likes
-
           </div>
+
           <div className="item" onClick={() => setCommentOpen(!commentOpen)}>
-          {/* <div className="item" > */}
+            {/* <div className="item" > */}
             <TextsmsOutlinedIcon />
             See Comments
           </div>
