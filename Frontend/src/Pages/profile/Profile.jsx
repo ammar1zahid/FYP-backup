@@ -11,7 +11,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Posts from "../../components/posts/Posts";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 import Update from "../../components/update/Update";
@@ -49,6 +49,7 @@ const Profile = () => {
     onError: (error) => {
       console.error("Error fetching relationship data:", error);
     },
+    
   });
 
   const queryClient = useQueryClient();
@@ -89,6 +90,9 @@ const Profile = () => {
   //     },
   //   }
   // );
+
+  const isFollowing = relationshipData && relationshipData.includes(currentUser.id);
+  console.log(isFollowing);
 
   return (
     <div className="profile">
@@ -160,49 +164,21 @@ const Profile = () => {
                 )}
               </div>
               <div className="right">
-                <EmailOutlinedIcon />
+                {/* Redirect to messenger route when the email icon is clicked */}
+                <Link
+                  to="/messenger"
+                  disabled={isFollowing}
+                  >
+
+                  <EmailOutlinedIcon />
+
+                </Link>
+                
                 <MoreVertIcon />
+              
               </div>
             </div>
 
-            {/* <div className="cvSection">
-              <h2 className="cvSectionTitle">Curriculum Vitae</h2>
-
-              <div className="cvCategory">
-                <h3>Education</h3>
-                <ul>
-                  <li>
-                    Bachelor of Science in Computer Science - University Name,
-                    Year
-                  </li>
-                  // Add more education items here
-                </ul>
-              </div>
-
-              <div className="cvCategory">
-                <h3>Experience</h3>
-                <ul>
-                  <li>Software Developer at Company Name, Year-Present</li>
-                  // Add more experience items here
-                </ul>
-              </div>
-
-              <div className="cvCategory">
-                <h3>Skills</h3>
-                <ul>
-                  <li>React, JavaScript, Node.js</li>
-                  // Add more skills here
-                </ul>
-              </div>
-
-              <div className="cvCategory">
-                <h3>Achievements</h3>
-                <ul>
-                  <li>Winner of Coding Hackathon, Year</li>
-                  // Add more achievements here
-                </ul>
-              </div>
-            </div> */}
 
             <br />
             <Posts Puserid={userId} />

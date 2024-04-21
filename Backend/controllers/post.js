@@ -66,6 +66,7 @@ export const getPosts = (req, res) => {
 
 };
 
+//for adding post from students
 export const addPost = (req, res) => {
 
   const currentDate = new Date();
@@ -103,6 +104,36 @@ export const addPost = (req, res) => {
 
 
 
+};
+
+//for adding post from recruiters
+export const addRecruiterPost = (req, res) => {
+  const currentDate = new Date();
+  const formattedDate = format(currentDate, 'yyyy-MM-dd HH:mm:ss');
+
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+
+    const { Postdesc, img, isJob } = req.body;
+
+    const q = "INSERT INTO `posts` (`Postdesc`, `img`, `Puserid`, `isJob`, `createdAt`) VALUES (?, ?, ?, ?, ?)";
+    
+    const values = [
+      Postdesc,
+      img,
+      userInfo.id,
+      isJob, // Use the value sent from the client
+      formattedDate
+    ];
+
+    db.query(q, values, (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json("Post has been created.");
+    });
+  });
 };
 
 
