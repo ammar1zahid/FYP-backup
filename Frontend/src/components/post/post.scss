@@ -86,6 +86,15 @@
           cursor: pointer;
           font-size: 14px;
         }
+        
+        button {
+          border: none;
+          background-color: #fd0000;
+          color: white;
+          padding: 5px 10px;
+          border-radius: 5px;
+          cursor: pointer;
+        }
       }
     }
   }

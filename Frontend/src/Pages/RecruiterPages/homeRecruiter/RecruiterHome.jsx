@@ -1,6 +1,6 @@
- import Stories from "../../components/stories/Stories"
- import Posts from "../../components/posts/Posts"
-  import Share from "../../components/shareRecruiter/ShareRecruiter"
+ import Stories from "../../../components/stories/Stories"
+ import Posts from "../../../components/posts/Posts"
+  import Share from "../../../components/RecruiterComponents/shareRecruiter/ShareRecruiter"
 import "./Recruiterhome.scss"
 
 const Home = () => {

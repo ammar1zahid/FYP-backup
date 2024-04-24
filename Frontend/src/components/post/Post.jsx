@@ -4,21 +4,27 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import AddBoxIcon from "@mui/icons-material/AddBox";
+import ContactMailOutlinedIcon from "@mui/icons-material/ContactMailOutlined";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
 import moment from "moment";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { makeRequest } from "../../axios";
-import { useContext,useRef  ,useState, useEffect} from "react";
+import { useContext, useRef, useState, useEffect } from "react";
 import { AuthContext } from "../../context/authContext";
 import { io } from "socket.io-client";
 
 const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [applied, setApplied] = useState(false);
 
   const { currentUser } = useContext(AuthContext);
+  const currentUserId = currentUser.id;
   const socket = useRef();
+
+  // console.log("current user from post",currentUserId)
 
   useEffect(() => {
     // Initialize the socket connection when the component mounts
@@ -30,10 +36,10 @@ const Post = ({ post }) => {
         socket.current.disconnect();
       }
     };
- }, []);
- 
+  }, []);
+
   // useEffect(() => {
-  //   socket.current = io("ws://localhost:8900");      
+  //   socket.current = io("ws://localhost:8900");
   // }, []);
 
   const { isLoading, error, data } = useQuery({
@@ -79,29 +85,27 @@ const Post = ({ post }) => {
     deleteMutation.mutate(post.Pid);
   };
 
-
   const handleLike = (type) => {
     //console.log(currentUser.id);
-  
-      if (socket.current) {
-        socket.current.emit("sendNotification", {
-          senderId: currentUser.id,
-          receiverId: post.Puserid,
-          type: 1,
-        });
-      } else {
-        console.error("Socket not initialized");
-      }
-    
+
+    if (socket.current) {
+      socket.current.emit("sendNotification", {
+        senderId: currentUser.id,
+        receiverId: post.Puserid,
+        type: 1,
+      });
+    } else {
+      console.error("Socket not initialized");
+    }
+
     mutation.mutate(data.includes(currentUser.id));
   };
 
   // Check if media is available
   const mediaCheck = post.img;
 
-
   // const handleNotification = (type) => {
-  //   type === 1 
+  //   type === 1
   //   socket.emit("sendNotification", {
   //     senderName: user,
   //     receiverName: post.username,
@@ -109,12 +113,53 @@ const Post = ({ post }) => {
   //   });
   // };
 
+  //apply job logic
 
+
+  //fetching all applied job of user
+
+  const {
+    isLoading: JobisLoading,
+    error: Joberror,
+    data: Jobdata,
+  } = useQuery({
+    queryKey: ["appliedjob", currentUserId],
+    queryFn: () =>
+      makeRequest
+        .get(`/jobs?userId=${currentUserId}`)
+        .then((res) => res.data),
+    onError: (error) => {
+      console.error("Error fetching Jobs data:", error);
+    },
+  });
+
+  
+  // console.log("job data is:", Jobdata);
+
+  //logic for applying for a job or cancel job request
+  const Jobmutation = useMutation({
+    mutationFn: (applied) => {
+      if (applied) {
+        return makeRequest.delete(`/jobs?postId=${post.Pid}`);
+      } else {
+        return makeRequest.post(`/jobs?userId=${currentUserId}`, {
+          postid: post.Pid,
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["appliedjob"]);
+      setApplied(!applied);
+    },
+  });
+
+  const handleApply = () => {
+    Jobmutation.mutate(Jobdata.includes(post.Pid));
+  };
 
   return (
     <div className="post">
       <div className="container">
-
         <div className="user">
           <div className="userInfo">
             <img src={"/upload/" + post.profilePic} alt="" />
@@ -188,6 +233,29 @@ const Post = ({ post }) => {
             <ShareOutlinedIcon />
             Share
           </div>
+
+
+          {/* Conditionally render the "Apply now" button if the post is a job */}
+          {post.isJob === 1 && (
+            <div className="item">
+              <ContactMailOutlinedIcon />
+              {/* <button onClick={handleApply}>Apply now</button> */}
+
+
+        {/* if user has already applied for the job display "Applied" button else display "Apply now" button */}
+
+              {JobisLoading ? (
+                "loading"
+              ) : (
+                <button onClick={handleApply}>
+                  {Jobdata.includes(post.Pid) ? "Applied" : "Apply now"}
+                </button>
+              ) }
+
+
+
+            </div>
+          )}
         </div>
         {commentOpen && <Comments postId={post.Pid} />}
       </div>

@@ -12,6 +12,7 @@ import relationshipRoutes from "./routes/relationships.js";
 import storiesRoutes from "./routes/storiesRoutes.js"
 import messagesRoutes from "./routes/messagesRoutes.js"
 import conversationsRoutes from "./routes/conversationsRoutes.js"
+import appliedJobRoutes from "./routes/appliedJobRoutes.js"
 
 
 
@@ -76,6 +77,10 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
  app.use("/api/stories", storiesRoutes);
  app.use("/api/messages", messagesRoutes);
  app.use("/api/conversations", conversationsRoutes);
+ app.use("/api/jobs", appliedJobRoutes);
+
+
+
 
 app.listen(8800, () => {
   console.log("API working!");

@@ -92,7 +92,7 @@ const Profile = () => {
   // );
 
   const isFollowing = relationshipData && relationshipData.includes(currentUser.id);
-  console.log(isFollowing);
+  // console.log(isFollowing);
 
   return (
     <div className="profile">

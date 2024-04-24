@@ -2,15 +2,7 @@ import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
 import { format } from 'date-fns';
 
-
-
-//import moment from "moment";
-// import moment from 'moment';
-// or
-// import 'moment';
-
-// const moment = require('moment')
-
+//fetching posts
 export const getPosts = (req, res) => {
    const userId = req.query.Puserid;
    const token = req.cookies.accessToken;
@@ -65,6 +57,85 @@ export const getPosts = (req, res) => {
   // });
 
 };
+
+
+
+//for fetching job posts from recruiters
+export const getJobPosts = (req, res) => {
+  const userId = req.query.Puserid;
+  const token = req.cookies.accessToken;
+  if (!token) return res.status(401).json("Not logged in!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+  
+    // Query to fetch only job posts
+    const q = userId !== "undefined" 
+      ? `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u 
+         ON (u.id = p.Puserid) 
+         WHERE p.Puserid=? AND p.isJob = 1
+         ORDER BY p.createdAt DESC` 
+      : `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u 
+        ON (u.id = p.Puserid) 
+         LEFT JOIN relationships AS r ON (p.Puserid = r.followeduserid) 
+         WHERE (r.followeruserid= ? OR p.Puserid =?) AND p.isJob = 1
+         ORDER BY p.createdAt DESC`;
+
+     // Values for the query
+     const values= userId !== "undefined"  ? [userId]: [userInfo.id, userInfo.id]; 
+
+     // Execute the query
+     db.query(q, values, (err, data) => {
+        if (err) return res.status(500).json(err);
+        return res.status(200).json(data);
+      });
+  });
+};
+
+
+
+// fetch job posts for which the user has applied
+export const getAppliedJobPosts = (req, res) => {
+  const userId = req.query.Puserid;
+  const token = req.cookies.accessToken;
+  
+  if (!token) return res.status(401).json("Not logged in!");
+
+  jwt.verify(token, "secretkey", (err, userInfo) => {
+    if (err) return res.status(403).json("Token is not valid!");
+
+    // Query to fetch job posts for which the user has applied
+    const q = `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p 
+               JOIN users AS u ON (u.id = p.Puserid) 
+               JOIN appliedjobs AS a ON (p.Pid = a.postid)
+               WHERE p.Puserid=? AND p.isJob = 1 AND a.userid = ?
+               ORDER BY p.createdAt DESC`;
+
+
+              //  SELECT p.Pid, p.Postdesc, p.img, p.Puserid, p.createdAt
+              //  FROM posts p
+              //  JOIN appliedjobs aj ON p.Pid = aj.postid
+              //  WHERE p.Puserid = 2 AND p.isJob = 1 AND aj.userid = 2;
+               
+
+
+
+    // Execute the query
+    db.query(q, [userId, userInfo.id], (err, data) => {
+      if (err) return res.status(500).json(err);
+      return res.status(200).json(data);
+    });
+  });
+};
+
+
+
+
+
+
+
+
+
 
 //for adding post from students
 export const addPost = (req, res) => {
