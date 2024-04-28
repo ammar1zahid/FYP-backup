@@ -1,8 +1,8 @@
 import React from "react";
 import Navbar from "../../components/navbar/Navbar";
-import LeftBar from "../../components/leftBar/LeftBar";
-import Home from "../RecruiterPages/homeRecruiter/RecruiterHome";
-import RecruiterJobComponent from "../RecruiterPages/jobRecruiter/RecruiterJobComponent";
+import LeftBar from "../../components/RecruiterComponents/leftBarRecruiter/LeftBarRecruiter";
+import ApplicationRecruiter from "../RecruiterPages/applicationRecruiter/ApplicationRecruiter";
+
 import RightBar from "../../components/rightBar/RightBar";
 import "../../style.scss"
 import { useContext , useEffect ,useRef , useState } from "react";
@@ -11,7 +11,7 @@ import { AuthContext } from "../../context/authContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 
-export default function StudentJobPage() {
+export default function RecruiterApplicationPage() {
   
     const { darkMode } = useContext(DarkModeContext);
     const { currentUser } = useContext(AuthContext);
@@ -29,7 +29,7 @@ export default function StudentJobPage() {
             <div style={{ display: "flex" }}>
               <LeftBar />
               <div style={{ flex: 6 }}>
-              <RecruiterJobComponent student={true} />
+                <ApplicationRecruiter/>
               </div>
               <RightBar/>
             </div>

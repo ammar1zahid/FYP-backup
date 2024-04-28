@@ -115,7 +115,6 @@ const Post = ({ post }) => {
 
   //apply job logic
 
-
   //fetching all applied job of user
 
   const {
@@ -125,15 +124,12 @@ const Post = ({ post }) => {
   } = useQuery({
     queryKey: ["appliedjob", currentUserId],
     queryFn: () =>
-      makeRequest
-        .get(`/jobs?userId=${currentUserId}`)
-        .then((res) => res.data),
+      makeRequest.get(`/jobs?userId=${currentUserId}`).then((res) => res.data),
     onError: (error) => {
       console.error("Error fetching Jobs data:", error);
     },
   });
 
-  
   // console.log("job data is:", Jobdata);
 
   //logic for applying for a job or cancel job request
@@ -209,6 +205,7 @@ const Post = ({ post }) => {
             </div>
           )}
         </div>
+
         <div className="info">
           <div className="item">
             {isLoading ? (
@@ -234,29 +231,27 @@ const Post = ({ post }) => {
             Share
           </div>
 
+          {/* apply for job button */}
 
           {/* Conditionally render the "Apply now" button if the post is a job */}
-          {post.isJob === 1 && (
+          {post.isJob === 1 && post.Puserid !== currentUserId && (
             <div className="item">
               <ContactMailOutlinedIcon />
               {/* <button onClick={handleApply}>Apply now</button> */}
 
+              {/* if user has already applied for the job display "Applied" button else display "Apply now" button */}
 
-        {/* if user has already applied for the job display "Applied" button else display "Apply now" button */}
-
-              {JobisLoading ? (
-                "loading"
-              ) : (
-                <button onClick={handleApply}>
-                  {Jobdata.includes(post.Pid) ? "Applied" : "Apply now"}
-                </button>
-              ) }
-
-
-
+                {JobisLoading ? (
+                  "loading"
+                ) : (
+                  <button onClick={handleApply}>
+                    {Jobdata.includes(post.Pid) ? "Applied" : "Apply now"}
+                  </button>
+                )}
             </div>
           )}
         </div>
+
         {commentOpen && <Comments postId={post.Pid} />}
       </div>
     </div>

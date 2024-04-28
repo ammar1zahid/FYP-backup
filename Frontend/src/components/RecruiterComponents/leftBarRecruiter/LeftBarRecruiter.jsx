@@ -56,8 +56,8 @@ const LeftBar = () => {
             <Link to="/recruiterJob"  style={{ textDecoration: 'none', color: 'inherit' }} >My Jobs</Link>
           </div>
           <div className="item">
-            <img src={Watch} alt="" />
-            <span>Watch</span>
+          <img src={Events} alt="" />
+          <Link to="/recruiterApplication"  style={{ textDecoration: 'none', color: 'inherit' }} >My Applications</Link>
           </div>
           <div className="item">
             <img src={Memories} alt="" />

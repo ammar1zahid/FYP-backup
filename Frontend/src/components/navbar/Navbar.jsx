@@ -34,7 +34,7 @@ const Navbar = () => {
           setNotifications((prev) => [...prev, data]);
         });
       }
-      console.log("notifications:",notifications)
+      // console.log("notifications:",notifications)
     }, [socket.current]);
     
     

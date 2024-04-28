@@ -7,6 +7,8 @@ import Messenger from './Pages/PagesLayout/MessengerPage';
 import RecruiterHomePage from './Pages/PagesLayout/RecruiterHomePage';
 import RecruiterJobPage from './Pages/PagesLayout/RecruiterJobPage';
 import StudentJobPage from './Pages/PagesLayout/StudentJobPage';
+import StudentAppliedJobs from './Pages/PagesLayout/StudentAppliedJobsPage';
+import RecruiterApplicationPage from './Pages/PagesLayout/RecruiterApplicationPage';
 function App() {
   
   return (
@@ -14,13 +16,21 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login/>}></Route> 
-          <Route path="/register" element={<Register/>}></Route>  
-          <Route path="/studentHome" element={<Test/>}></Route>  
-          <Route path="/recruiterHome" element={<RecruiterHomePage/>}></Route>  
+          <Route path="/register" element={<Register/>}></Route>
           <Route path="/profile/:userId" element={<ProfilePage/>}></Route>
           <Route path="/messenger" element={<Messenger/>}></Route>
-          <Route path="/recruiterJob" element={<RecruiterJobPage/>}></Route>
+
+          {/* student routes   */}
+          <Route path="/studentHome" element={<Test/>}></Route>  
           <Route path="/studentJob" element={<StudentJobPage/>}></Route>
+          <Route path="/studentAppliedJob" element={<StudentAppliedJobs/>}></Route>
+
+
+          {/* recruiter routes   */}
+          <Route path="/recruiterHome" element={<RecruiterHomePage/>}></Route> 
+          <Route path="/recruiterJob" element={<RecruiterJobPage/>}></Route>
+          <Route path="/recruiterApplication" element={<RecruiterApplicationPage/>}></Route>
+         
 
 
         </Routes>

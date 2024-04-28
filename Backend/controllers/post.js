@@ -35,27 +35,6 @@ export const getPosts = (req, res) => {
    
     })
   
-  
-    //   console.log(userId);
-
-    // const q =
-    //   userId !== "undefined"
-    //     ? `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId) WHERE p.userId = ? ORDER BY p.createdAt DESC`
-    //     : `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u ON (u.id = p.userId)
-    // LEFT JOIN relationships AS r ON (p.userId = r.followedUserId) WHERE r.followerUserId= ? OR p.userId =?
-    // ORDER BY p.createdAt DESC`;
-
-    // const values =
-    //   userId !== "undefined" ? [userId] : [userInfo.id, userInfo.id];
-
-    
-
-  //   db.query(q, values, (err, data) => {
-  //     if (err) return res.status(500).json(err);
-  //     return res.status(200).json(data);
-  //   });
-  // });
-
 };
 
 
@@ -105,23 +84,19 @@ export const getAppliedJobPosts = (req, res) => {
     if (err) return res.status(403).json("Token is not valid!");
 
     // Query to fetch job posts for which the user has applied
-    const q = `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p 
-               JOIN users AS u ON (u.id = p.Puserid) 
-               JOIN appliedjobs AS a ON (p.Pid = a.postid)
-               WHERE p.Puserid=? AND p.isJob = 1 AND a.userid = ?
-               ORDER BY p.createdAt DESC`;
+    const q = `SELECT p.*, u.id AS userId, name, profilePic FROM posts AS p JOIN users AS u 
+              ON (u.id = p.Puserid)  
+              JOIN appliedjobs AS aj ON p.Pid = aj.postid 
+              WHERE aj.userid = ?
+              ORDER BY p.createdAt DESC;`;
 
 
-              //  SELECT p.Pid, p.Postdesc, p.img, p.Puserid, p.createdAt
-              //  FROM posts p
-              //  JOIN appliedjobs aj ON p.Pid = aj.postid
-              //  WHERE p.Puserid = 2 AND p.isJob = 1 AND aj.userid = 2;
-               
-
-
+              // SELECT p.Pid, p.Postdesc, p.img, p.Puserid, p.createdAt FROM posts AS p 
+              // JOIN appliedjobs AS aj ON p.Pid = aj.postid 
+              // WHERE aj.userid = 2;
 
     // Execute the query
-    db.query(q, [userId, userInfo.id], (err, data) => {
+    db.query(q, [userId], (err, data) => {
       if (err) return res.status(500).json(err);
       return res.status(200).json(data);
     });

@@ -1,0 +1,157 @@
+@import "../../../style.scss";
+
+.post {
+  @include themify($themes) {
+    -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    -moz-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
+    border-radius: 20px;
+    background-color: themed("bg");
+    color: themed("textColor");
+
+    .container {
+      padding: 20px;
+
+      .user {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+
+        .userInfo {
+          display: flex;
+          gap: 20px;
+
+          img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+          }
+
+          .details {
+            display: flex;
+            flex-direction: column;
+
+            .name {
+              font-weight: 500;
+            }
+
+            .date {
+              font-size: 12px;
+            }
+          }
+        }
+        button {
+          position: absolute;
+          top: 30px;
+          right: 0;
+          border: none;
+          background-color: #f0544f;
+          padding: 5px;
+          cursor: pointer;
+          color: white;
+        }
+      }
+
+      .content {
+        margin: 20px 0px;
+
+        img {
+          width: 100%;
+          max-height: 500px;
+          object-fit: cover;
+          margin-top: 20px;
+        }
+
+        video {
+          width: 100%;
+          max-height: 500px;
+          margin-top: 20px;
+
+          // Additional styles for videos within .content
+          // Add your custom styles here
+        }
+      }
+
+      .info {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+
+        // .item {
+        //   display: flex;
+        //   align-items: center;
+        //   gap: 10px;
+        //   cursor: pointer;
+        //   font-size: 14px;
+        // }
+        
+        // button {
+        //   border: none;
+        //   background-color: #fd0000;
+        //   color: white;
+        //   padding: 5px 10px;
+        //   border-radius: 5px;
+        //   cursor: pointer;
+        // }
+      }
+
+      // Integration of the provided SCSS code with updated class names
+      .applicantContainer {
+        padding: 20px;
+        .applicantItem {
+          margin-bottom: 10px;
+          .applicantUserInfo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            img {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              object-fit: cover;
+            }
+            span {
+              font-weight: 500;
+              color: black;
+            }
+            .date {
+              font-size: 12px;
+            }
+
+            .applicantButtons {
+              display: flex;
+              // align-items: center;
+              margin-left: auto;
+              gap: 10px;
+              button {
+                border: none;
+                border-radius: 3px;
+                padding: 5px;
+                color: white;
+                cursor: pointer;
+  
+                &:first-child {
+                  background-color: #5271ff;
+                }
+
+                &:nth-child(2) {
+                  background-color: #5271ff;
+                  /* Apply styles to the second button */
+                }
+  
+                // &:last-child {
+                //   background-color: #f0544f;
+                // }
+              }
+            }
+
+          }
+
+        }
+      }
+    }
+  }
+}

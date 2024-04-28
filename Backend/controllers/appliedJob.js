@@ -20,6 +20,27 @@ export const checkAppliedJob = (req, res) => {
   });
 };
 
+
+// export const getUsersAppliedToJob = (req, res) => {
+//   // Retrieve all users who applied to a specific job
+//   const q = "SELECT u.* FROM users u INNER JOIN appliedjobs aj ON u.id = aj.userid WHERE aj.postid = ?";
+//   db.query(q, [req.query.postId], (err, data) => {
+//     if (err) return res.status(500).json(err);
+//     return res.status(200).json(data);
+//   });
+// };
+
+
+export const getUsersAppliedToJob = (req, res) => {
+  // Retrieve all users who applied to a specific job along with applied_at
+  const q = "SELECT u.*, aj.applied_at FROM users u INNER JOIN appliedjobs aj ON u.id = aj.userid WHERE aj.postid = ?";
+  db.query(q, [req.query.postId], (err, data) => {
+    if (err) return res.status(500).json(err);
+    return res.status(200).json(data);
+  });
+};
+
+
 export const applyJob = (req, res) => {
   // Apply for a job by adding an entry to the appliedjobs table
   const token = req.cookies.accessToken;
