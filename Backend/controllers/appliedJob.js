@@ -21,15 +21,6 @@ export const checkAppliedJob = (req, res) => {
 };
 
 
-// export const getUsersAppliedToJob = (req, res) => {
-//   // Retrieve all users who applied to a specific job
-//   const q = "SELECT u.* FROM users u INNER JOIN appliedjobs aj ON u.id = aj.userid WHERE aj.postid = ?";
-//   db.query(q, [req.query.postId], (err, data) => {
-//     if (err) return res.status(500).json(err);
-//     return res.status(200).json(data);
-//   });
-// };
-
 
 export const getUsersAppliedToJob = (req, res) => {
   // Retrieve all users who applied to a specific job along with applied_at
@@ -82,3 +73,32 @@ export const cancelJobApplication = (req, res) => {
     });
   });
 };
+
+
+
+export const rejectApplication = (req, res) => {
+  // Reject an application by removing the entry from the appliedjobs table
+  
+  const userId = req.query.userId;
+  const postId = req.query.postId;
+
+  // Delete the entry from the appliedjobs table
+  const q = "DELETE FROM appliedjobs WHERE userid = ? AND postid = ?";
+
+
+  db.query(q, [userId, postId], (err, data) => {
+    if (err) {
+     
+      return res.status(500).json({ error: "An error occurred while processing the request." });
+    }
+
+    if (data.affectedRows === 0) {
+      // If no rows were affected, it means no matching entry was found
+    
+      return res.status(404).json({ error: "No matching entry found for deletion." });
+    }
+
+    return res.status(200).json("Application rejected successfully.");
+  });
+};
+

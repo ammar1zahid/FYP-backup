@@ -55,7 +55,7 @@ const JobApplicationsComponent = () => {
                   <img src={`/upload/${post.profilePic}`} alt="" />
                   <div className="details">
                     <span className="name">{post.name}</span>
-                    <span>{post.Pid}</span>
+                    
                     <span className="date">
                       {moment(post.createdAt).fromNow()}
                     </span>
@@ -88,8 +88,8 @@ const JobApplicationsComponent = () => {
 
               {/* Display the list of users who have applied to the post */}
               
+
               {/* calling the ApplicantsForPost component by passing the current post id */}
-   
               <ApplicantsForPost postId={post.Pid} />
 
             </div>
@@ -105,6 +105,22 @@ const JobApplicationsComponent = () => {
 const ApplicantsForPost = ({ postId }) => {
 
   const queryClient = useQueryClient();
+
+  //for rejecting an application by useQueryClient
+  const rejectApplicationMutation = useMutation({
+    mutationFn: ({ userId, postId }) => makeRequest.delete(`/jobs/reject?userId=${userId}&postId=${postId}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]);
+    },
+  });
+  
+  //for rejecting an application by removing the entry from the appliedjobs table
+  const handleRejectApplication = (userId, postId) => {
+    rejectApplicationMutation.mutate({ userId, postId });
+  };
+
+
+
 
   //for fetching all users who have applied to the current post
 
@@ -124,6 +140,8 @@ const ApplicantsForPost = ({ postId }) => {
     return <div>Currently no applications</div>;
   }
 
+
+
   return (
     <div>
       {applicantsData.map((applicant) => (
@@ -140,6 +158,9 @@ const ApplicantsForPost = ({ postId }) => {
               <div className="applicantButtons">
                 <button>View profile</button>
                 <button>Schedule interview</button>
+                <button 
+                onClick={() => handleRejectApplication(applicant.id, postId)}
+                > Reject</button>
               </div>
 
            

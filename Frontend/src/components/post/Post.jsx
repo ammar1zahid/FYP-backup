@@ -233,6 +233,8 @@ const Post = ({ post }) => {
 
           {/* apply for job button */}
 
+          
+
           {/* Conditionally render the "Apply now" button if the post is a job */}
           {post.isJob === 1 && post.Puserid !== currentUserId && (
             <div className="item">

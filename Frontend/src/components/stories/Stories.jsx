@@ -58,7 +58,7 @@ const Stories = () => {
         : isLoading
         ? "loading"
         : data.map((story) => (
-            <div className="story" key={story.id}>
+            <div className="story" key={story.Sid}>
               <img src={"/upload/" + story.img} alt="" />
               <span>{story.name}</span>
               {story.Suserid === currentUser.id && (
