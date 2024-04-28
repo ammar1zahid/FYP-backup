@@ -23,6 +23,7 @@ const Profile = () => {
   const { currentUser } = useContext(AuthContext);
 
    const userId = parseInt(useLocation().pathname.split("/")[2]);
+  //  taking user id
  
  
 

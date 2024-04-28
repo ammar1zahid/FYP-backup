@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import axios from 'axios';
 import './vendor/bootstrap/css/bootstrap.min.css'
 import './vendor/font-awesome/css/font-awesome.min.css'
 import './vendor/devicons/css/devicons.min.css'
 import './vendor/simple-line-icons/css/simple-line-icons.css'
 import './css/resume.min.css'
 import "./img/profile.jpg"
+
+import { AuthContext } from '../context/authContext.jsx';
 
 // import "./vendor/bootstrap/js/bootstrap.bundle.min.js"
 
@@ -113,6 +116,12 @@ const Button = styled('button')(
 
 function EditablePortfolio() {
 
+ 
+  const { currentUser } = useContext(AuthContext);
+
+  const userid = currentUser.id;
+
+  console.log("user id: ", userid)
 
   // const [anchor, setAnchor] = React.useState(null);
 
@@ -131,9 +140,12 @@ function EditablePortfolio() {
   const [navItems, setNavItems] = useState([]);
   const id = open ? 'popup-body' : undefined;
 
-  const handleClick = () => {
-    setOpen(!open);
-  };
+  
+
+
+  // const handleClick = () => {
+  //   setOpen(!open);
+  // };
 
   const handleAddNavItem = (item) => {
     // Add item to navbar only if it's not already added
@@ -141,7 +153,50 @@ function EditablePortfolio() {
       setNavItems([...navItems, item]);
       console.log(`Adding ${item} to the navbar`);
     }
+  
   };
+
+
+
+  // show toggle functionlaity only if about sec is done
+
+
+
+ const [userAboutId, setuserAboutId] = useState(null); // Initialize state to store aboutId
+
+ useEffect(() => {
+  // Fetch the userAboutId from the backend API
+  const fetchuserAboutId = async () => {
+      try {
+          const response = await axios.get(`http://localhost:8800/api/portfolio/checkUserAboutid/${userid}`); // Replace userId with your actual userId
+          setuserAboutId(response.data.userAboutId); // Set the userAboutId received from the backend
+      } catch (error) {
+          console.error('Error fetching userAboutId:', error);
+      }
+  };
+
+  fetchuserAboutId(); // Call the fetchuserAboutId function when the component mounts
+}, []);
+
+
+    const handleClick = () => {
+        if (userAboutId) {
+          setOpen(!open);
+            // Perform normal toggle functionality
+            // For example, toggle a state to show/hide a section
+        } else {
+            // Display a message to the user
+            alert('Create About section first');
+        }
+    };
+
+    console.log("about id for current user: ", userAboutId)
+      // show toggle functionlaity only if about sec is done
+
+
+
+
+
 
   return (
     
@@ -256,9 +311,17 @@ function EditablePortfolio() {
 
 
 <div>
+
+
+
+
       <Button aria-describedby={id} type="button" onClick={handleClick}>
-        Toggle Popup
+        Add More Sections
       </Button>
+
+
+
+
       <BasePopup id={id} open={open} anchor={null}>
         <PopupBody>
           <button onClick={() => handleAddNavItem('Experience')}>Experience +</button>
@@ -266,6 +329,9 @@ function EditablePortfolio() {
           <p></p>
           <button onClick={() => handleAddNavItem('Skills')}>Skills +</button>
           <button onClick={() => handleAddNavItem('Interests')}>Interests +</button>
+          <p></p>
+          <button onClick={() => handleAddNavItem('Awards')}>Awards +</button>
+          <button onClick={() => handleAddNavItem('Certifications')}>Certifications +</button>
         </PopupBody>
       </BasePopup>
 
@@ -334,11 +400,27 @@ function EditablePortfolio() {
 
       {navItems.includes('Interests') && (
         <section id="interests">
-          {/* <h2>Interests Section</h2> */}
+          
           <InterestsP />
-          {/* Add your content for Interests section */}
+          
         </section>
       )}
+
+      {navItems.includes('Awards') && (
+        <section id="awards">
+          
+          <AwardsP />
+          
+        </section>
+      )}
+
+      {navItems.includes('Certifications') && (
+        <section id="certifications">
+          
+          <CertificationsP />
+          
+        </section>
+      )}  
   
     </div> 
     {/* MAIN BIG DIV */}

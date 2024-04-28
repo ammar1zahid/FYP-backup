@@ -14,6 +14,8 @@ import Courses from "../../assets/12.png";
 import Fund from "../../assets/13.png";
 import cvicon from "../../assets/cvicon.png"
 import portfolioIcon from "../../assets/portfoliosmol.png"
+import smoledit from "../../assets/smoledit.png"
+
 import { AuthContext } from "../../context/authContext";
 import { useContext } from "react";
 import { Link } from "react-router-dom";
@@ -73,7 +75,7 @@ const LeftBar = () => {
 
 
 
-          {/* ADDING THE LINK TO CV PAGE HERE */}
+          {/* ADDING THE LINK TO pprtfolio PAGE HERE */}
 
 
           <div className="item">
@@ -86,6 +88,19 @@ const LeftBar = () => {
             
           </div>
 
+
+          {/* ADDING THE LINK TO editable portfolio HERE */}
+
+
+            <div className="item">
+            {/* <img src={Friends} alt="" /> */}
+            <img src={smoledit} alt="" />
+            
+            <Link to={"/EditablePortfolio"} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <span>Edit Portfolio</span>
+            </Link>
+            
+          </div>
 
 
 

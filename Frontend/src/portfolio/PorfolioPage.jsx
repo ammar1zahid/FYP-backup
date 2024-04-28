@@ -1,10 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import axios from 'axios';
 import './vendor/bootstrap/css/bootstrap.min.css'
 import './vendor/font-awesome/css/font-awesome.min.css'
 import './vendor/devicons/css/devicons.min.css'
 import './vendor/simple-line-icons/css/simple-line-icons.css'
 import './css/resume.min.css'
 import "./img/profile.jpg"
+
+import { AuthContext } from '../context/authContext';
 
 // import $ from 'jquery'; 
 
@@ -15,6 +18,57 @@ import "./img/profile.jpg"
 
 
 function PorfolioPage() {
+
+  const { currentUser } = useContext(AuthContext);
+
+  const userid = currentUser.id;
+
+  const [aboutData, setAboutData] = useState({
+    fullname: '',
+    address: '',
+    contact_number: '',
+    email: '',
+    about_paragraph: '',
+    facebookLink: '', 
+    twitterLink: '', 
+    githubLink: '', 
+    linkedinLink: ''
+  });
+
+
+  const fetchAboutData = async () => {
+    try {
+        const response = await axios.get(`http://localhost:8800/api/portfolio/getAboutData/${userid}`);
+        setAboutData(response.data);
+    } catch (error) {
+        console.error('Error fetching About data:', error);
+    }
+  };
+  
+  useEffect(() => {
+    fetchAboutData();
+  }, []);
+  
+
+  let fblink = "";
+  let twitterlink = "";
+  let linkedinlink = "";
+  let githublink = "";
+
+
+
+
+  // if(aboutData.facebookLink !== null)
+  // {
+  //     console.log("in about link frontend");
+  //     fblink = aboutData.facebookLink;
+  //     console.log("fblink: ", fblink)
+  // }
+
+
+
+
+
 
 
 
@@ -108,46 +162,111 @@ function PorfolioPage() {
     {/* ABOUT SECTION */}
     <section className="resume-section p-3 p-lg-5 d-flex d-column" id="about">
       <div className="my-auto">
-        <h1 className="mb-0">Clarence
-          <span className="text-primary">Taylor</span>
+        <h1 className="mb-0">
+          <span>
+          {aboutData.fullname}
+            </span>
         </h1>
-        <div className="subheading mb-5">3542 Berry Street · Cheyenne Wells, CO 80810 · (317) 585-8468 ·
-          <a href="mailto:name@email.com">name@email.com</a>
+        <div className="subheading mb-5">
+          {aboutData.address}
+          · 
+          {aboutData.contact_number}
+          ·
+          <a href="mailto:name@email.com">
+            {aboutData.email}
+            </a>
         </div>
-        <p className="mb-5">I am experienced in leveraging agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition.</p>
+        <p className="mb-5">
+          {aboutData.about_paragraph}
+        </p>
+
+
+{/* social links checking whether user has link in db or not and which link */}
+        {aboutData.facebookLink !== null && (
+
+
+        console.log("in about link frontend"),
+        fblink = aboutData.facebookLink,
+        console.log("fblink: ", fblink)
+
+
+        )}
+
+{aboutData.twitterLink !== null && (
+
+console.log("in about twitter link frontend"),
+twitterlink = aboutData.twitterLink,
+console.log("twitterlink: ", twitterlink)
+
+)}
+
+{aboutData.linkedinLink !== null && (
+
+console.log("in about linkedin link frontend"),
+linkedinlink = aboutData.linkedinLink,
+console.log("linkedinlink: ", linkedinlink)
+
+)}
+
+{aboutData.githubLink !== null && (
+
+console.log("in about github link frontend"),
+githublink = aboutData.githubLink,
+console.log("githublink: ", githublink)
+
+)}
+
+{/* social links checking whether user has link in db or not and which link */}
+
+
+
         <ul className="list-inline list-social-icons mb-0">
+
+        {fblink !== "" && (
           <li className="list-inline-item">
-            <a href="#">
+            <a href={fblink}>
               <span className="fa-stack fa-lg">
                 <i className="fa fa-circle fa-stack-2x" />
                 <i className="fa fa-facebook fa-stack-1x fa-inverse" />
               </span>
             </a>
           </li>
+        )}
+
+        {twitterlink !== "" && (
           <li className="list-inline-item">
-            <a href="#">
+            <a href={twitterlink}>
               <span className="fa-stack fa-lg">
                 <i className="fa fa-circle fa-stack-2x" />
                 <i className="fa fa-twitter fa-stack-1x fa-inverse" />
               </span>
             </a>
           </li>
+        )}
+
+        {linkedinlink !== "" && (
           <li className="list-inline-item">
-            <a href="#">
+            <a href={linkedinlink}>
               <span className="fa-stack fa-lg">
                 <i className="fa fa-circle fa-stack-2x" />
                 <i className="fa fa-linkedin fa-stack-1x fa-inverse" />
               </span>
             </a>
           </li>
+        )}
+
+        {githublink !== "" && (
           <li className="list-inline-item">
-            <a href="#">
+            <a href={githublink}>
               <span className="fa-stack fa-lg">
                 <i className="fa fa-circle fa-stack-2x" />
                 <i className="fa fa-github fa-stack-1x fa-inverse" />
               </span>
             </a>
           </li>
+        )}
+
+
         </ul>
       </div>
     </section>

@@ -11,6 +11,7 @@ import relationshipRoutes from "./routes/relationships.js";
  import cookieParser from "cookie-parser";
 import storiesRoutes from "./routes/storiesRoutes.js"
 import cvRoutes from "./routes/cv.js"
+import portfolioRoutes from "./routes/portfolio.js"
 import $ from 'jquery';
 
 //middlewares
@@ -72,6 +73,8 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
  app.use("/api/likes", likeRoutes);
  app.use("/api/relationships", relationshipRoutes);
  app.use("/api/stories", storiesRoutes);
+
+ app.use("/api/portfolio", portfolioRoutes);
 
  app.use("/api/cv", cvRoutes)
 
