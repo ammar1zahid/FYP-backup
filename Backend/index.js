@@ -13,6 +13,7 @@ import storiesRoutes from "./routes/storiesRoutes.js"
 import messagesRoutes from "./routes/messagesRoutes.js"
 import conversationsRoutes from "./routes/conversationsRoutes.js"
 import appliedJobRoutes from "./routes/appliedJobRoutes.js"
+import interviewRoutes from "./routes/interviewRoutes.js"
 
 
 
@@ -78,6 +79,7 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
  app.use("/api/messages", messagesRoutes);
  app.use("/api/conversations", conversationsRoutes);
  app.use("/api/jobs", appliedJobRoutes);
+ app.use("/api/interviews", interviewRoutes);
 
 
 

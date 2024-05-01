@@ -9,6 +9,7 @@ import RecruiterJobPage from './Pages/PagesLayout/RecruiterJobPage';
 import StudentJobPage from './Pages/PagesLayout/StudentJobPage';
 import StudentAppliedJobs from './Pages/PagesLayout/StudentAppliedJobsPage';
 import RecruiterApplicationPage from './Pages/PagesLayout/RecruiterApplicationPage';
+import RecruiterInterviewPage from './Pages/PagesLayout/RecruiterInterviewPage';
 function App() {
   
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/recruiterHome" element={<RecruiterHomePage/>}></Route> 
           <Route path="/recruiterJob" element={<RecruiterJobPage/>}></Route>
           <Route path="/recruiterApplication" element={<RecruiterApplicationPage/>}></Route>
+          <Route path="/recruiterInterview" element={<RecruiterInterviewPage/>}></Route>
          
 
 

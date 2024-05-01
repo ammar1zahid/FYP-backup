@@ -6,7 +6,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 const Update = ({ setOpenUpdate, user }) => {
   
-  console.log("user:", user);
+
   
   const [cover, setCover] = useState(null);
   const [profile, setProfile] = useState(null);

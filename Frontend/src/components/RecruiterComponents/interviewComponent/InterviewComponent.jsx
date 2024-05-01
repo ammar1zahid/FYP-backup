@@ -4,12 +4,12 @@ import { useContext,useEffect, useState } from "react";
 import moment from "moment";
 import { AuthContext } from "../../../context/authContext";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import "./jobApplicationsComponent.scss";
-import InterviewRecruiterModal from "../interviewRecruiterModal/InterviewRecruiterModal";
+import "./interviewComponent.scss";
+import UpdateInterviewModal from "../updateInterviewModal/UpdateInterviewModal ";
 import axios from "axios";
 
 
-const JobApplicationsComponent = () => {
+const InterviewComponent = () => {
   const { currentUser } = useContext(AuthContext);
   const [menuOpen, setMenuOpen] = useState(false);
   const currentUserId = currentUser.id;
@@ -33,6 +33,7 @@ const JobApplicationsComponent = () => {
     },
   });
 
+  //for deleting a job post
   const handleDelete = (Pid) => {
     deleteMutation.mutate(Pid);
   };
@@ -49,6 +50,8 @@ const JobApplicationsComponent = () => {
       {!isLoading && data && data.length === 0 && <div>Currently no posts</div>}
       {data &&
         data.map((post) => (
+
+
           <div key={post.Pid} className="post" style={{ marginBottom: "20px" }}>
             <div className="container">
               <div className="user">
@@ -90,11 +93,13 @@ const JobApplicationsComponent = () => {
               {/* Display the list of users who have applied to the post */}
               
 
-              {/* calling the ApplicantsForPost component by passing the current post id */}
-              <ApplicantsForPost postId={post.Pid} />
+              {/* calling the InterviewApplicantsForPost component by passing the current post id */}
+              <InterviewApplicantsForPost postId={post.Pid} />
 
             </div>
           </div>
+
+
         ))}
     </div>
   );
@@ -103,75 +108,51 @@ const JobApplicationsComponent = () => {
 
 
 //ApplicantsForPost component
-const ApplicantsForPost = ({ postId }) => {
+const InterviewApplicantsForPost = ({ postId }) => {
 
   const queryClient = useQueryClient();
 
   //variable for opening the update modal
-  const [openUpdate, setOpenUpdate] = useState(false);
+   const [openUpdate, setOpenUpdate] = useState(false);
 
-  //for storing scheduled interviews of the current post for logic of scheduled interview button
-  const [scheduledInterviews, setScheduledInterviews] = useState([]);
-
-    //variable for storing the applicant object to pass in the update modal
-    const [applicantObj, setApplicantObj] = useState(null);
-
-  //for rejecting an application by useQueryClient
-  const rejectApplicationMutation = useMutation({
-    mutationFn: ({ userId, postId }) => makeRequest.delete(`/jobs/reject?userId=${userId}&postId=${postId}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries(["posts"]);
-    },
-  });
+  //variable for storing the applicant object to pass in the update modal
+   const [applicantObj, setApplicantObj] = useState(null);
   
-  //for rejecting an application by removing the entry from the appliedjobs table
-  const handleRejectApplication = (userId, postId) => {
-    rejectApplicationMutation.mutate({ userId, postId });
-  };
 
-
-
-
-  //for fetching all users who have applied to the current post
+  //for fetching all schuduled interviews of a post
 
   const { isLoading, error, data: applicantsData } = useQuery({
     queryKey: ["applicants", postId],
-    queryFn: () => makeRequest.get(`/jobs/users?postId=${postId}`).then((res) => res.data),
+    queryFn: () => makeRequest.get(`/interviews/post?postId=${postId}`).then((res) => res.data),
     enabled: !!postId, // Ensures the query is only executed when postId is truthy
     refetchOnWindowFocus: false, // Optional: Disable refetch on window focus
     retry: 1, // Optional: Number of retries before failing the query
   });
-
-
-  useEffect(() => {
-    // Fetch scheduled interview dates and times for the current post
-    const fetchScheduledInterviews = async () => {
-      try {
-        const response = await makeRequest.get(`/interviews/post?postId=${postId}`);
-        setScheduledInterviews(response.data.map(interview => interview.studentid));
-      } catch (error) {
-        console.error('Error fetching scheduled interviews:', error);
-      }
+  
+    //for marking a interview as done by useQueryClient
+    const MarkDoneMutation = useMutation({
+      mutationFn: ({ interviewId }) => makeRequest.delete(`/interviews?interviewId=${interviewId}`),
+      onSuccess: () => {
+        queryClient.invalidateQueries(["applicants"]);
+      },
+    });
+    
+    //for rejecting an application by removing the entry from the appliedjobs table
+    const handleDone = (interviewId) => {
+      MarkDoneMutation.mutate({ interviewId });
     };
 
-    if (postId ) {
-      fetchScheduledInterviews();
-      // console.log(scheduledInterviews);
-    }
-
-  },  [postId, openUpdate]);
 
 
-
-
-
-  if (isLoading) return <div>Loading applicants...</div>;
-  if (error) return <div>Error fetching applicants: {error.message}</div>;
+  if (isLoading) return <div>Loading interviews...</div>;
+  if (error) return <div>Error fetching interviews applicants: {error.message}</div>;
 
   //if there are no users who have applied to the current post, display a message
   if (!Array.isArray(applicantsData) || applicantsData.length === 0) {
-    return <div>Currently no applications</div>;
+    return <div>Currently no interviews</div>;
   }
+
+
 
 
 
@@ -182,36 +163,35 @@ const ApplicantsForPost = ({ postId }) => {
           <div className="applicantItem">
             <div className="applicantUserInfo">
               <img src={`/upload/${applicant.profilePic}`} alt="" />
-              <span>{applicant.name}</span>
 
-              {/* <span className="date">
-                Applied {moment(applicant.applied_at).fromNow()}
-              </span> */}
+              <span>{applicant.name}</span>
+        
+              <span className="date">
+                Interview Scheduled  {moment(applicant.scheduledAt).fromNow()}
+              </span>
 
               <div className="applicantButtons">
-                <button>View profile</button>
-
-                {!scheduledInterviews.includes(applicant.id) ? (
-                  <button onClick={() => {
-                    setOpenUpdate(true)
-                    setApplicantObj(applicant)
-                  }}>Schedule interview</button>
-                ) : (
-                  <button style={{ backgroundColor: "yellow", color: "black" }} disabled >Interview Scheduled</button>
-                )}
                 
                 <button 
-                onClick={() => handleRejectApplication(applicant.id, postId)}
-                > Reject</button>
+                onClick={() => {
+                  setOpenUpdate(true)
+                  setApplicantObj(applicant)
+                }}
+                > Edit</button>
+
+              <button
+                onClick={() => handleDone(applicant.id)}
+              >Mark as Done</button>
 
               </div>
-
-           
-
             </div>
           </div>
-          {openUpdate && <InterviewRecruiterModal  setOpenUpdate={setOpenUpdate}  postId={postId} user={applicantObj} />}
-        </div>  
+          
+          {/* UpdateInterviewModal interview modal for editing interview of any specific user */}
+
+          {/* pass current post id and applicant object to the update interview modal */}
+          {openUpdate && <UpdateInterviewModal  setOpenUpdate={setOpenUpdate}  postId={postId} applicant={applicantObj} />}
+        </div>
       ))}
     </div>
   );
@@ -220,4 +200,4 @@ const ApplicantsForPost = ({ postId }) => {
 
 
 
-export default JobApplicationsComponent;
+export default  InterviewComponent;

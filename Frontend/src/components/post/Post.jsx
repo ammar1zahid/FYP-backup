@@ -5,6 +5,7 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AddBoxIcon from "@mui/icons-material/AddBox";
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import ContactMailOutlinedIcon from "@mui/icons-material/ContactMailOutlined";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
@@ -252,6 +253,11 @@ const Post = ({ post }) => {
                 )}
             </div>
           )}
+                {/* style={{ paddingLeft: "50px" }} */}
+          <div className="item">
+            <BookmarkBorderIcon />
+            Save
+          </div>
         </div>
 
         {commentOpen && <Comments postId={post.Pid} />}

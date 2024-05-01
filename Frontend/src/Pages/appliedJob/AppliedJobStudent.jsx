@@ -5,7 +5,7 @@ import "./appliedJobStudent.scss"
 import { useContext } from "react";
 import { AuthContext } from "../../context/authContext";
 
-const Home = () => {
+const AppliedJobStudent = () => {
   const { currentUser } = useContext(AuthContext);
   const userId = currentUser.id;
   return (
@@ -17,4 +17,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default AppliedJobStudent
