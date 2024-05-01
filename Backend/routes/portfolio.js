@@ -30,7 +30,9 @@ import {
     saveCertificationsData,
     getCertificationsData,
     getLastCertificationsSectionID,
-    deleteCertificationsSection
+    deleteCertificationsSection,
+
+    getUserSections
 
 
 
@@ -109,5 +111,9 @@ router.get('/getLastCertificationsSectionID', getLastCertificationsSectionID);
 
 router.delete('/deleteCertificationsSection', deleteCertificationsSection);
 //CERTIFICATIONS ROUTES
+
+
+router.get('/getUserSections', getUserSections);
+
 
 export default router;

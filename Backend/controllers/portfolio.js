@@ -1695,3 +1695,58 @@ export const saveCertificationsData = (req, res) => {
   };
   
 //CERTIFICATIONS SECTION'S APIS
+
+
+
+
+
+
+
+// GETTING THE SECTIONS IDS
+
+// Get Available Sections for a User
+export const getUserSections = (req, res) => {
+  const userId = req.query.userId;
+
+  // Query to get the portfolio information for the given user
+  const query = `
+    SELECT 
+      aboutID,
+      educationID, 
+      experienceID, 
+      skillsID, 
+      awardsID, 
+      certificationsID, 
+      interestsID
+    FROM portfolio
+    WHERE userID = ?
+  `;
+
+  db.query(query, [userId], (err, data) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+
+    if (data.length === 0) {
+      return res.status(404).json({ error: "No portfolio found for this userId" });
+    }
+
+    const portfolio = data[0]; // Fetch the portfolio row for the given user
+    const availableSections = [];
+
+    // Check which sections have a valid ID (non-null)
+    if (portfolio.aboutID) availableSections.push("about");
+    if (portfolio.educationID) availableSections.push("education");
+    if (portfolio.experienceID) availableSections.push("experience");
+    if (portfolio.skillsID) availableSections.push("skills");
+    if (portfolio.awardsID) availableSections.push("awards");
+    if (portfolio.certificationsID) availableSections.push("certifications");
+    if (portfolio.interestsID) availableSections.push("interests");
+    
+    
+    
+
+    // Return the list of available sections
+    return res.status(200).json(availableSections);
+  });
+};

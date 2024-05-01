@@ -9,11 +9,11 @@
 // POSTING, UPDATING AND FETCHING DATA CORRECTLY
 import React, { useEffect, useState, useContext } from 'react';
 import { AuthContext } from '../../context/authContext';
-import '../vendor/bootstrap/css/bootstrap.min.css';
-import '../vendor/font-awesome/css/font-awesome.min.css';
-import '../vendor/devicons/css/devicons.min.css';
-import '../vendor/simple-line-icons/css/simple-line-icons.css';
-import '../css/resume.min.css';
+// import '../vendor/bootstrap/css/bootstrap.min.css';
+// import '../vendor/font-awesome/css/font-awesome.min.css';
+// import '../vendor/devicons/css/devicons.min.css';
+// import '../vendor/simple-line-icons/css/simple-line-icons.css';
+// import '../css/resume.min.css';
 
 function EducationP() {
     const { currentUser } = useContext(AuthContext);

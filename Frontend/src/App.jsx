@@ -35,8 +35,8 @@ function App() {
           <Route path="/FirstCV" element={<FirstCV/>}></Route>
           <Route path="/SecondCV" element={<SecondCV/>}></Route>  
           <Route path="/Text" element={<Text/>}></Route> 
-          <Route path="/PortfolioPage" element={<PorfolioPage/>}></Route> 
-          <Route path="/EditablePortfolio" element={<EditablePortfolio/>}></Route> 
+          <Route path="/PortfolioPage" element={<PorfolioPage/>}></Route>
+          <Route path="/EditablePortfolio" element={<EditablePortfolio/>}></Route>
 
         </Routes>
       </BrowserRouter>

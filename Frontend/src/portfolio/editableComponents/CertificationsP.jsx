@@ -2,11 +2,11 @@ import React, { useEffect, useState, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCertificate } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../../context/authContext';
-import '../vendor/bootstrap/css/bootstrap.min.css';
-import '../vendor/font-awesome/css/font-awesome.min.css';
-import '../vendor/devicons/css/devicons.min.css';
-import '../vendor/simple-line-icons/css/simple-line-icons.css';
-import '../css/resume.min.css';
+// import '../vendor/bootstrap/css/bootstrap.min.css';
+// import '../vendor/font-awesome/css/font-awesome.min.css';
+// import '../vendor/devicons/css/devicons.min.css';
+// import '../vendor/simple-line-icons/css/simple-line-icons.css';
+// import '../css/resume.min.css';
 
 function CertificationsP() {
   const { currentUser } = useContext(AuthContext);
