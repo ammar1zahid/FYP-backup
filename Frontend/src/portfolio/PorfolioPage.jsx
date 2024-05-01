@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCertificate } from '@fortawesome/free-solid-svg-icons';
 import './vendor/bootstrap/css/bootstrap.min.css'
 import './vendor/font-awesome/css/font-awesome.min.css'
 import './vendor/devicons/css/devicons.min.css'
@@ -9,20 +11,16 @@ import "./img/profile.jpg"
 
 import { AuthContext } from '../context/authContext';
 
-// import $ from 'jquery'; 
-
-// import './vendor/bootstrap/js/bootstrap.bundle.min.js'
-// import './vendor/jquery-easing/jquery.easing.min.js'
-
- // Import jQuery Easing plugin
 
 
 function PorfolioPage() {
 
   const { currentUser } = useContext(AuthContext);
-
   const userid = currentUser.id;
 
+  const userId = currentUser.id;
+
+  // ABOUT DATA FETCHING API WORK
   const [aboutData, setAboutData] = useState({
     fullname: '',
     address: '',
@@ -55,18 +53,119 @@ function PorfolioPage() {
   let linkedinlink = "";
   let githublink = "";
 
+  // ABOUT DATA FETCHING API WORK
 
 
 
-  // if(aboutData.facebookLink !== null)
-  // {
-  //     console.log("in about link frontend");
-  //     fblink = aboutData.facebookLink;
-  //     console.log("fblink: ", fblink)
-  // }
 
 
 
+
+
+  // EDUCATION DATA FETCHING API WORK
+  const [educationData, setEducationData] = useState([]); // State for holding education data
+
+  const fetchEducationData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8800/api/portfolio/getEducationData/${userId}`); // Fetching from API
+      setEducationData(response.data); // Storing in state
+    } catch (error) {
+      console.error('Error fetching education data:', error);
+    }
+  };
+
+  // Fetch education data when component mounts
+  useEffect(() => {
+    fetchEducationData();
+  }, [userId]);
+
+  // EDUCATION DATA FETCHING API WORK
+
+
+
+
+
+  //EXPERIENCE DATA FETCHING API WORK
+  // State to store experience data
+  const [experienceData, setExperienceData] = useState([]); 
+
+  // Function to fetch experience data
+  const fetchExperienceData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8800/api/portfolio/getExperienceData/${userId}`); // API endpoint
+      setExperienceData(response.data); // Store fetched data in state
+    } catch (error) {
+      console.error('Error fetching experience data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExperienceData(); // Fetch experience data when the component mounts
+  }, [userId]);
+  //EXPERIENCE DATA FETCHING API WORK
+
+
+  //CERTIFICATIONS DATA FETCHING API WORK
+  const [certificationsData, setCertificationsData] = useState([]); // State for Certifications section
+
+  // Function to fetch Certifications data
+  const fetchCertificationsData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8800/api/portfolio/getCertificationsData/${userId}`);
+      setCertificationsData(response.data); // Store fetched Certifications data
+    } catch (error) {
+      console.error('Error fetching Certifications data:', error);
+    }
+  };
+
+  // Fetch Certifications data when the component mounts
+  useEffect(() => {
+    fetchCertificationsData(); // Fetch Certifications data on component mount
+  }, [userId]);
+  //CERTIFICATIONS DATA FETCHING API WORK
+
+
+
+  //AWARDS DATA FETCHING API WORK
+  // State to store awards data
+  const [awardsData, setAwardsData] = useState([]);
+
+  // Function to fetch awards data
+  const fetchAwardsData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8800/api/portfolio/getAwardsData/${userId}`); // Fetch awards data
+      setAwardsData(response.data); // Store fetched data in state
+    } catch (error) {
+      console.error('Error fetching awards data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchAwardsData(); // Fetch awards data when the component mounts
+  }, [userId]);
+  //AWARDS DATA FETCHING API WORK
+
+
+
+  //INTERESTS DATA FETCHING API WORK
+  const [interestsData, setInterestsData] = useState([]); // State to store fetched Interests data
+
+  const fetchInterestsData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8800/api/portfolio/getInterestsData/${userId}`); // Fetching from API
+      setInterestsData(response.data); // Store fetched data in state
+    } catch (error) {
+      console.error('Error fetching interests data:', error);
+    }
+  };
+  
+  // Fetch Interests data when the component mounts
+  useEffect(() => {
+    fetchInterestsData(); // Fetch Interests data when component mounts
+  }, [userId]);
+  
+  //INTERESTS DATA FETCHING API WORK
+  
 
 
 
@@ -143,6 +242,10 @@ function PorfolioPage() {
 
         <li className="nav-item">
           <a className="nav-link js-scroll-trigger" href="#awards">Awards</a>
+        </li>
+
+        <li className="nav-item">
+          <a className="nav-link js-scroll-trigger" href="#certifications">Certifications</a>
         </li>
 
 
@@ -274,84 +377,62 @@ console.log("githublink: ", githublink)
 
 
 
+
+
     {/* EXPERIENCE SECTION */}
-    <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
-      <div className="my-auto">
-        <h2 className="mb-5">Experience</h2>
-        <div className="resume-item d-flex flex-column flex-md-row mb-5">
-          <div className="resume-content mr-auto">
-            <h3 className="mb-0">Senior Web Developer</h3>
-            <div className="subheading mb-3">Intelitec Solutions</div>
-            <p>Bring to the table win-win survival strategies to ensure proactive domination. At the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution. User generated content in real-time will have multiple touchpoints for offshoring.</p>
-          </div>
-          <div className="resume-date text-md-right">
-            <span className="text-primary">March 2013 - Present</span>
-          </div>
+   
+
+<section className="resume-section p-3 p-lg-5 d-flex flex-column" id="experience">
+        <div className="my-auto">
+          <h2 className="mb-5">Experience</h2>
+
+          {experienceData.map((item) => (
+            <div key={item.experienceSectionID} className="resume-item d-flex flex-column flex-md-row mb-5">
+              <div className="resume-content mr-auto">
+                <h3 className="mb-0">{item.jobTitle}</h3>
+                <div className="subheading mb-3">{item.jobCompany}</div>
+                <p>{item.jobDescription}</p>
+              </div>
+              <div className="resume-date text-md-right">
+                <span className="text-primary">{item.jobDate}</span>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="resume-item d-flex flex-column flex-md-row mb-5">
-          <div className="resume-content mr-auto">
-            <h3 className="mb-0">Web Developer</h3>
-            <div className="subheading mb-3">Intelitec Solutions</div>
-            <p>Capitalize on low hanging fruit to identify a ballpark value added activity to beta test. Override the digital divide with additional clickthroughs from DevOps. Nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line.</p>
-          </div>
-          <div className="resume-date text-md-right">
-            <span className="text-primary">December 2011 - March 2013</span>
-          </div>
-        </div>
-        <div className="resume-item d-flex flex-column flex-md-row mb-5">
-          <div className="resume-content mr-auto">
-            <h3 className="mb-0">Junior Web Designer</h3>
-            <div className="subheading mb-3">Shout! Media Productions</div>
-            <p>Podcasting operational change management inside of workflows to establish a framework. Taking seamless key performance indicators offline to maximise the long tail. Keeping your eye on the ball while performing a deep dive on the start-up mentality to derive convergence on cross-platform integration.</p>
-          </div>
-          <div className="resume-date text-md-right">
-            <span className="text-primary">July 2010 - December 2011</span>
-          </div>
-        </div>
-        <div className="resume-item d-flex flex-column flex-md-row">
-          <div className="resume-content mr-auto">
-            <h3 className="mb-0">Web Design Intern</h3>
-            <div className="subheading mb-3">Shout! Media Productions</div>
-            <p>Collaboratively administrate empowered markets via plug-and-play networks. Dynamically procrastinate B2C users after installed base benefits. Dramatically visualize customer directed convergence without revolutionary ROI.</p>
-          </div>
-          <div className="resume-date text-md-right">
-            <span className="text-primary">September 2008 - June 2010</span>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+
+
     {/* EXPERIENCE SECTION */}
+
+
 
 
 
 
     {/* EDUCATION SECTION */}
-    <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="education">
-      <div className="my-auto">
-        <h2 className="mb-5">Education</h2>
-        <div className="resume-item d-flex flex-column flex-md-row mb-5">
-          <div className="resume-content mr-auto">
-            <h3 className="mb-0">University of Colorado Boulder</h3>
-            <div className="subheading mb-3">Bachelor of Science</div>
-            <div>Computer Science - Web Development Track</div>
-            <p>GPA: 3.23</p>
-          </div>
-          <div className="resume-date text-md-right">
-            <span className="text-primary">August 2006 - May 2010</span>
-          </div>
+    
+
+
+<section className="resume-section p-3 p-lg-5 d-flex flex-column" id="education">
+        <div className="my-auto">
+          <h2 className="mb-5">Education</h2>
+
+          {educationData.map((item) => (
+            <div key={item.educationSectionID} className="resume-item d-flex flex-column flex-md-row mb-5">
+              <div className="resume-content mr-auto">
+                <h3 className="mb-0">{item.universityName}</h3>
+                <div className="subheading mb-3">{item.degreeType}</div>
+                <div>{item.courseName}</div>
+                <p>CGPA: {item.cgpa}</p>
+              </div>
+              <div className="resume-date text-md-right">
+                <span className="text-primary">{item.degreeDate}</span>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="resume-item d-flex flex-column flex-md-row">
-          <div className="resume-content mr-auto">
-            <h3 className="mb-0">James Buchanan High School</h3>
-            <div className="subheading mb-3">Technology Magnet Program</div>
-            <p>GPA: 3.56</p>
-          </div>
-          <div className="resume-date text-md-right">
-            <span className="text-primary">August 2002 - May 2006</span>
-          </div>
-        </div>
-      </div>
-    </section>
+      </section>
+
     {/* EDUCATION SECTION */}
 
 
@@ -420,54 +501,66 @@ console.log("githublink: ", githublink)
 
 
     {/* INTERESTS SECTION */}
-    <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="interests">
-      <div className="my-auto">
-        <h2 className="mb-5">Interests</h2>
-        <p>Apart from being a web developer, I enjoy most of my time being outdoors. In the winter, I am an avid skiier and novice ice climber. During the warmer months here in Colorado, I enjoy mountain biking, free climbing, and kayaking.</p>
-        <p className="mb-0">When forced indoors, I follow a number of sci-fi and fantasy genre movies and television shows, I am an aspiring chef, and I spend a large amount of my free time exploring the latest technolgy advancements in the front-end web development world.</p>
+
+<section className="resume-section p-3 p-lg-5 d-flex flex-column" id="interests">
+  <div className="my-auto">
+    <h2 className="mb-5">Interests</h2>
+    {interestsData.map((item) => (
+      <div key={item.interestsSectionID} className="mb-5">
+        <p>{item.paragraph1}</p> {/* Display the fetched data */}
+        <p className="mb-0">{item.paragraph2}</p> {/* Display the fetched data */}
       </div>
-    </section>
+    ))}
+  </div>
+</section>
+
+
+
+
     {/* INTERESTS SECTION */}
 
 
 
 
-    {/* AWARDS AND CERTIFICATIONS SECTION */}
+    {/* AWARDS  */}
     <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="awards">
-      <div className="my-auto">
-        <h2 className="mb-5">Awards &amp; Certifications</h2>
-        <ul className="fa-ul mb-0">
-          <li>
-            <i className="fa-li fa fa-trophy text-warning" />
-            Google Analytics Certified Developer</li>
-          <li>
-            <i className="fa-li fa fa-trophy text-warning" />
-            Mobile Web Specialist - Google Certification</li>
-          <li>
-            <i className="fa-li fa fa-trophy text-warning" />
-            1<sup>st</sup>
-            Place - University of Colorado Boulder - Emerging Tech Competition 2009</li>
-          <li>
-            <i className="fa-li fa fa-trophy text-warning" />
-            1<sup>st</sup>
-            Place - University of Colorado Boulder - Adobe Creative Jam 2008 (UI Design Category)</li>
-          <li>
-            <i className="fa-li fa fa-trophy text-warning" />
-            2<sup>nd</sup>
-            Place - University of Colorado Boulder - Emerging Tech Competition 2008</li>
-          <li>
-          </li><li>
-            <i className="fa-li fa fa-trophy text-warning" />
-            1<sup>st</sup>
-            Place - James Buchanan High School - Hackathon 2006</li>
-          <li>
-            <i className="fa-li fa fa-trophy text-warning" />
-            3<sup>rd</sup>
-            Place - James Buchanan High School - Hackathon 2005</li>
-        </ul>
-      </div>
-    </section>
-    {/* AWARDS AND CERTIFICATIONS SECTION */}
+        <div className="my-auto">
+          <h2 className="mb-5">Awards</h2>
+
+          {awardsData.map((item) => (
+            <div key={item.awardsSectionID} className="resume-item d-flex flex-column flex-md-row mb-5">
+              <ul className="fa-ul mb-0">
+                <li>
+                  <i className="fa-li fa fa-trophy text-warning" />
+                  {item.awardTitle}
+                </li>
+              </ul>
+              <p>{item.awardDescription}</p>
+            </div>
+          ))}
+
+        </div>
+      </section>
+    {/* AWARDS*/}
+
+
+    {/* certificaitons */}
+    <section className="resume-section p-3 p-lg-5 d-flex flex-column" id="certifications">
+    <div className="my-auto">
+          <h2 className="mb-5">Certifications</h2>
+          {certificationsData.map((certification) => (
+            <div key={certification.certificationsSectionID}>
+              <ul className="fa-ul mb-0">
+                <li>
+                  <FontAwesomeIcon icon={faCertificate} style={{ color: '#dadd36' }} />
+                  {certification.certificationName}
+                </li>
+              </ul>
+              <p>{certification.certificationDescription}</p>
+            </div>
+          ))}
+        </div>
+    </section> 
 
 
 
