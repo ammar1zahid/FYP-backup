@@ -61,7 +61,7 @@ const LeftBar = () => {
           </div>
           <div className="item">
             <img src={Memories} alt="" />
-            <span>Interview</span>
+            <Link to="/studentInterview"  style={{ textDecoration: 'none', color: 'inherit' }} >Interviews</Link>
           </div>
           <div className="item">
             <img src={Gallery} alt="" />

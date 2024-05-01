@@ -10,6 +10,7 @@ import StudentJobPage from './Pages/PagesLayout/StudentJobPage';
 import StudentAppliedJobs from './Pages/PagesLayout/StudentAppliedJobsPage';
 import RecruiterApplicationPage from './Pages/PagesLayout/RecruiterApplicationPage';
 import RecruiterInterviewPage from './Pages/PagesLayout/RecruiterInterviewPage';
+import StudentInterviewPage from './Pages/PagesLayout/StudentInterviewPage';
 function App() {
   
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/studentHome" element={<Test/>}></Route>  
           <Route path="/studentJob" element={<StudentJobPage/>}></Route>
           <Route path="/studentAppliedJob" element={<StudentAppliedJobs/>}></Route>
+          <Route path="/studentInterview" element={<StudentInterviewPage/>}></Route>
 
 
           {/* recruiter routes   */}
