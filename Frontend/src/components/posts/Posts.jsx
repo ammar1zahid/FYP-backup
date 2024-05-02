@@ -9,7 +9,7 @@ const Posts = ({Puserid}) => {
   const { isLoading, error, data } = useQuery({queryKey: ["posts"], 
   queryFn: () =>
     makeRequest.get("/posts?Puserid="+Puserid).then((res) => {
-    //makeRequest.get("/posts").then((res) => {
+      // console.log("Post data response ",res.data);
       return res.data;
     })}
   );

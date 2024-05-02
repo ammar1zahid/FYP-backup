@@ -5,7 +5,8 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import AddBoxIcon from "@mui/icons-material/AddBox";
-import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import BookmarkBorderOutlined from "@mui/icons-material/BookmarkBorder";
+import BookmarkOutlined from "@mui/icons-material/Bookmark";
 import ContactMailOutlinedIcon from "@mui/icons-material/ContactMailOutlined";
 import { Link } from "react-router-dom";
 import Comments from "../comments/Comments";
@@ -20,6 +21,7 @@ const Post = ({ post }) => {
   const [commentOpen, setCommentOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [applied, setApplied] = useState(false);
+  const [saved, setSaved] = useState(false); // State to track whether the post is saved by the current user
 
   const { currentUser } = useContext(AuthContext);
   const currentUserId = currentUser.id;
@@ -117,7 +119,6 @@ const Post = ({ post }) => {
   //apply job logic
 
   //fetching all applied job of user
-
   const {
     isLoading: JobisLoading,
     error: Joberror,
@@ -154,6 +155,51 @@ const Post = ({ post }) => {
     Jobmutation.mutate(Jobdata.includes(post.Pid));
   };
 
+  //save post logic
+
+  //fetching all save posts of user
+  const {
+    isLoading: savePostLoading,
+    error: savePostError,
+    data: savePostData,
+  } = useQuery({
+    queryKey: ["savedposts", currentUserId],
+    queryFn: () =>
+      makeRequest
+        .get(`/savePosts?userId=${currentUserId}`)
+        .then((res) => res.data),
+    onError: (error) => {
+      console.error("Error fetching Jobs data:", error);
+    },
+  });
+
+  //logic for saving a post or unsave a post
+  const savePostMutation = useMutation({
+    mutationFn: (saved) => {
+      if (saved) {
+        // console.log("post id is:", post.Pid);
+        return makeRequest.delete(`/savePosts?postId=${post.Pid}`);
+      } else {
+        // console.log("post id is:", post.Pid);
+        return makeRequest.post("/savePosts", {
+          postId: post.Pid,
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["savedposts"]);
+      setApplied(!saved);
+    },
+  });
+
+  // Function to handle saving/un-saving a post
+  const handleSavePost = () => {
+    // Call the savePostMutation with appropriate arguments
+    // savePostMutation.mutate(savePostData.includes(post.Pid));
+    if (savePostData) {
+      savePostMutation.mutate(savePostData.includes(post.Pid));
+    }
+  };
   return (
     <div className="post">
       <div className="container">
@@ -170,6 +216,7 @@ const Post = ({ post }) => {
               >
                 <span className="name">{post.name}</span>
               </Link>
+
               <span className="date">{moment(post.createdAt).fromNow()}</span>
               {/* <span className="date">1 min ago</span> */}
             </div>
@@ -208,6 +255,7 @@ const Post = ({ post }) => {
         </div>
 
         <div className="info">
+          {/* like button logic */}
           <div className="item">
             {isLoading ? (
               "loading"
@@ -234,8 +282,6 @@ const Post = ({ post }) => {
 
           {/* apply for job button */}
 
-          
-
           {/* Conditionally render the "Apply now" button if the post is a job */}
           {post.isJob === 1 && post.Puserid !== currentUserId && (
             <div className="item">
@@ -244,20 +290,34 @@ const Post = ({ post }) => {
 
               {/* if user has already applied for the job display "Applied" button else display "Apply now" button */}
 
-                {JobisLoading ? (
-                  "loading"
-                ) : (
-                  <button onClick={handleApply}>
-                    {Jobdata.includes(post.Pid) ? "Applied" : "Apply now"}
-                  </button>
-                )}
+              {JobisLoading ? (
+                "loading"
+              ) : (
+                <button onClick={handleApply}>
+                  {Jobdata.includes(post.Pid) ? "Applied" : "Apply now"}
+                </button>
+              )}
             </div>
           )}
-                {/* style={{ paddingLeft: "50px" }} */}
-          <div className="item">
-            <BookmarkBorderIcon />
-            Save
-          </div>
+
+
+          {/* Conditionally render the "Save" button */}
+          {savePostLoading ? (
+            "loading"
+          ) : (
+            <div className="item" onClick={handleSavePost}>
+              {
+                savePostData && savePostData.includes(post.Pid) ? (
+                  <BookmarkOutlined /> // Use BookmarkOutlined icon if the post is saved
+                ) : (
+                  <BookmarkBorderOutlined />
+                ) // Use BookmarkBorderOutlined icon if the post is not saved
+              }
+              {savePostData && savePostData.includes(post.Pid)
+                ? "Saved"
+                : "Save"}
+            </div>
+          )}
         </div>
 
         {commentOpen && <Comments postId={post.Pid} />}
