@@ -16,13 +16,15 @@ const Posts = ({Puserid}) => {
 
   return (
     <div className="posts">
-      {error
-        ? "Something went wrong!"
-        : isLoading
-        ? "loading"
-        : data.map((post) => <Post post={post} key={post.id} />)}
-
-        {/* {posts.map((post) => <Post post={post} key={post.id} />)} */}
+      {error ? (
+        "Something went wrong!"
+      ) : isLoading ? (
+        "Loading..."
+      ) : data.length === 0 ? (
+        <p className="no-applied-posts">You haven't applied to any jobs yet</p>
+      ) : (
+        data.map((post) => <Post post={post} key={post.id} />)
+      )}
     </div>
   );
 };

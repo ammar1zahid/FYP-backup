@@ -36,6 +36,11 @@
           color: gray;
         }
 
+        p {
+          //color: gray;
+          color: themed("textColorSoft");
+        }
+
         .user {
           display: flex;
           align-items: center;

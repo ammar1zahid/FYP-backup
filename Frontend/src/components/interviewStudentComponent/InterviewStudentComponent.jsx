@@ -46,7 +46,8 @@ const InterviewStudentComponent = () => {
     <div>
       {error && <div>Error fetching data</div>}
       {isLoading && <div>Loading...</div>}
-      {!isLoading && data && data.length === 0 && <div>Currently no posts</div>}
+      {!isLoading && data && data.length === 0 && 
+      <div className="no-posts" >You haven't applied to any jobs yet so no interviews</div>}
       {data &&
         data.map((post) => (
 

@@ -47,20 +47,37 @@ const Update = ({ setOpenUpdate, user }) => {
 
   const handleClick = async (e) => {
     e.preventDefault();
-
-    //TODO: find a better way to get image URL
-
-    let coverUrl;
-    let profileUrl;
-     
-    coverUrl = cover ? await upload(cover) : user.coverPic;
-    profileUrl = profile ? await upload(profile) : user.profilePic;
-
+  
+    let coverUrl=null;
+    let profileUrl=null;
+  
+    // Upload cover image if selected
+    if (cover) {
+      console.log("in if cover:",cover);
+      coverUrl = await upload(cover);
+      console.log("in if coverUrl:",coverUrl);
+    } else {
+      coverUrl = user.coverPic; // Use existing cover picture if no new one selected
+    }
+  
+    // Upload profile image if selected
+    if (profile) {
+      console.log("in if profile:",profile);
+      profileUrl = await upload(profile);
+      console.log("in if profileUrl:",profileUrl);
+    } else {
+      profileUrl = user.profilePic; // Use existing profile picture if no new one selected
+    }
+  
+    // Update user data with new information
     mutation.mutate({ ...texts, coverPic: coverUrl, profilePic: profileUrl });
+  
+    // Reset state variables
     setOpenUpdate(false);
     setCover(null);
     setProfile(null);
   }
+  
     return (
       <div className="update">
         <div className="wrapper">

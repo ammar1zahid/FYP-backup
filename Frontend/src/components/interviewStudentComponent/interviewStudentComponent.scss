@@ -1,5 +1,16 @@
 @import "../../style.scss";
 
+.no-posts {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #000000;
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  // background-color: #f9f9f9;
+}
+
 .post {
   @include themify($themes) {
     -webkit-box-shadow: 0px 0px 25px -10px rgba(0, 0, 0, 0.38);
