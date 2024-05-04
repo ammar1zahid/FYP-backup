@@ -31,19 +31,6 @@ const Stories = () => {
     },
   });
 
-  // const deleteMutation = useMutation({
-  //   mutationFn: (Pid) => {
-  //       return makeRequest.delete(`/posts/`+ Pid);
-  //   },
-  //   onSuccess: () => {
-  
-  //     queryClient.invalidateQueries(["posts"]);
-  //   },
-  //   });
-
-  //   const handleDelete = () => {
-  //     deleteMutation.mutate(post.Pid);
-  //   };
 
   return (
     <div className="stories">

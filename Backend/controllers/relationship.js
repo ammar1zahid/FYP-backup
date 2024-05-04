@@ -1,7 +1,7 @@
 import { db } from "../connect.js";
 import jwt from "jsonwebtoken";
 
-//to get all the users who follow you
+//to get all the users id who follow the current user
 export const getRelationships = (req,res)=>{
     const q = "SELECT followeruserid FROM relationships WHERE followeduserid = ?";
 
@@ -10,6 +10,53 @@ export const getRelationships = (req,res)=>{
       return res.status(200).json(data.map(relationship=>relationship.followeruserid));
     });
 }
+
+
+//to get detail of all users who follow the current user
+export const getRelationshipsData = async (req, res) => {
+  const userId = req.query.userId;
+
+  try {
+    // Fetch user IDs of all followers
+    const followerIdsQuery = "SELECT followeruserid FROM relationships WHERE followeduserid = ?";
+    const followerIds = await new Promise((resolve, reject) => {
+      db.query(followerIdsQuery, [userId], (err, results) => {
+        if (err) reject(err);
+        resolve(results);
+      });
+    });
+
+    // Initialize an array to store user data of followers
+    const followersData = [];
+
+    // Fetch user data for each follower asynchronously
+    for (const followerId of followerIds) {
+      const userDataQuery = "SELECT id, username, profilePic FROM users WHERE id=?";
+      const userData = await new Promise((resolve, reject) => {
+        db.query(userDataQuery, [followerId.followeruserid], (err, results) => {
+          if (err) reject(err);
+          resolve(results[0]); // Assuming there's only one user for each ID
+        });
+      });
+      followersData.push(userData);
+    }
+
+    // Send the user data of followers in the response
+    res.json(followersData);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+
+
+
+
+
+
+
+
 
 //to get all the users you follow
 //to get your friends ie to which other users you're following
@@ -64,7 +111,43 @@ export const getFriendsData = async (req, res) => {
 
 
 
+// FOLLOWERS of current user who are NOT FOLLOWED by current user
+export const getFollowersNotFollowedByCurrentUser = (req, res) => {
+  const userId = req.query.userId;
 
+  // SQL query to get the users who follow the current user but are not followed by the current user
+  const q = `
+    SELECT followeruserid 
+    FROM relationships 
+    WHERE followeduserid = ? AND followeruserid NOT IN (
+      SELECT followeduserid 
+      FROM relationships 
+      WHERE followeruserid = ?
+    )
+  `;
+
+  db.query(q, [userId, userId], (err, data) => {
+    if (err) return res.status(500).json(err);
+
+    // Extract follower user IDs from the query result
+    const followerUserIds = data.map(relationship => relationship.followeruserid);
+
+    res.status(200).json(followerUserIds);
+  });
+};
+
+
+
+
+
+
+
+
+
+
+// SUGGESTED FRIENDS
+
+//to get suggested friends data
 export const getSuggestedFriendsData = async (req, res) => {
   // Extract the user ID from the request query parameters
   const userId = Number(req.query.userId); // Convert userId to number
@@ -141,38 +224,43 @@ export const getSuggestedFriendsData = async (req, res) => {
 
 
 
+//to get suggested friends ids
 
-
-
-
-//to get suggested friends
 export const getSuggestedFriends = (req, res) => {
   // SQL query to get the users followed by the provided user
   const q = "SELECT followeduserid FROM relationships WHERE followeruserid = ?";
   
   // Set to store the IDs of friends to avoid duplicates
   let friendIdsSet = new Set();
-  console.log("Initial friendIdsSet: ", friendIdsSet);
 
   // Function to recursively fetch friends of friends
   const fetchFriendsOfFriends = (userIds) => {
     // SQL query to get the users followed by the provided list of user IDs
-    const q = "SELECT followeduserid FROM relationships WHERE followeruserid IN (?)";
+    let friendsOfFriendsQuery;
+    if (userIds.length > 0) {
+      friendsOfFriendsQuery = "SELECT followeduserid FROM relationships WHERE followeruserid IN (?)";
+    } else {
+      // If there are no initial friend IDs, suggest all other users
+      const suggestAllUsersQuery = "SELECT id FROM users WHERE id != ?";
+      db.query(suggestAllUsersQuery, [req.query.followeruserid], (err, allUsers) => {
+        if (err) return res.status(500).json(err);
+        const allUserIds = allUsers.map(user => user.id);
+        return res.status(200).json(allUserIds);
+      });
+      return; // Exit the function early
+    }
 
-    db.query(q, [userIds], (err, data) => {
+    db.query(friendsOfFriendsQuery, [userIds], (err, data) => {
       if (err) return res.status(500).json(err);
 
       // Extract followed user IDs from the query result
       const followedUserIds = data.map(relationship => relationship.followeduserid);
-      console.log("Followed user IDs: ", followedUserIds);
-
+      
       // Add new followed user IDs to the friendIds set
       followedUserIds.forEach(id => friendIdsSet.add(id));
-      console.log("Updated friendIdsSet: ", friendIdsSet);
 
       // Filter out the user IDs that have already been processed
       const newFollowedUserIds = followedUserIds.filter(id => !friendIdsSet.has(id));
-      console.log("New followed user IDs to process: ", newFollowedUserIds);
 
       // Check if there are new followed user IDs
       if (newFollowedUserIds.length > 0) {
@@ -184,7 +272,7 @@ export const getSuggestedFriends = (req, res) => {
         // Convert set to array and remove the provided user's ID
         const friendIds = [...friendIdsSet].filter(id => id.toString() !== req.query.followeruserid.toString());
         // Send the unique friend IDs in the response
-        return res.status(200).json(friendIds);
+        res.status(200).json(friendIds);
       }
     });
   };
@@ -195,12 +283,15 @@ export const getSuggestedFriends = (req, res) => {
 
     // Extract initial friend IDs
     const initialFriendIds = data.map(relationship => relationship.followeduserid);
-    console.log("Initial friend IDs for the provided user: ", initialFriendIds);
 
     // Call the function to recursively fetch friends of friends
     fetchFriendsOfFriends(initialFriendIds);
   });
 };
+
+
+
+
 
 
 
