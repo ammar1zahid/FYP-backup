@@ -271,10 +271,14 @@ body{font-family:'Open Sans',serif;padding-top:54px;color:#868e96}@media (min-wi
           
           {/* side navbar profile img */}
           <img className="img-fluid img-profile rounded-circle mx-auto mb-2" 
-          // src="img/profile.jpg" 
-          src='https://images.pexels.com/photos/3792581/pexels-photo-3792581.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
-          alt='img' />
-  
+          
+          // src='https://images.pexels.com/photos/3792581/pexels-photo-3792581.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2'
+          // alt='img' />
+
+          src={"/upload/" + currentUser.profilePic} alt="" />
+
+
+   
         </span>
       </a>
   
