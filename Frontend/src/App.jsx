@@ -11,6 +11,8 @@ import CVlayout from './Pages/CVlayout';
 import PorfolioPage from './portfolio/PorfolioPage';
 import EditablePortfolio from './portfolio/EditablePortfolio';
 import AdminPage from './admin/AdminPage';
+import Meow from './Pages/meow/Meow';
+
 // import { CartProvider } from './context/ContextReducer';
 // import Home from './Pages/home/Home';
 // import Profile from './Pages/profile/Profile';
@@ -39,6 +41,8 @@ function App() {
           <Route path="/PortfolioPage" element={<PorfolioPage/>}></Route>
           <Route path="/EditablePortfolio" element={<EditablePortfolio/>}></Route>    
           <Route path="/AdminPage" element={<AdminPage/>}></Route>
+          <Route path="/Meow" element={<Meow/>}></Route>
+          
         </Routes>
       </BrowserRouter>
     {/* </CartProvider>    */}
