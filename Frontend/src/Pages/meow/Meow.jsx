@@ -1,13 +1,130 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useContext, useState } from 'react';
 import '@fortawesome/fontawesome-free/css/all.min.css'; // For FontAwesome icons
 
+
+import { AuthContext } from '../../context/authContext';
+import axios from 'axios';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+// import jwtDecode from "jwt-decode"; // Import a JWT decoding library
+
 const Meow = () => {
+  
+  
+
+
+// LOGIN LOGIC CODE
+
+
+
+
+// const { login } = useContext(AuthContext);
+
+
+// const [loginputs, setlogInputs] = useState({
+//   email: "",
+//   password: "",
+// });
+
+// const [logerr, setlogErr] = useState(null);
+// // Step 1: Define a new state variable for the login message
+// const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+// const navigate = useNavigate()
+
+// const loghandleChange = (e) => {
+//   setlogInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+// };
+
+
+// const loghandleLogin = async (e) => {
+//   e.preventDefault();
+//   try {
+//     await login(loginputs);
+//     navigate("/test")
+
+//     // Step 2: Update the state on successful login
+//     setIsLoggedIn(true);
+    
+//   } catch (logerr) {
+//     setlogErr(logerr.response.data);
+//     setIsLoggedIn(false); // Optionally reset on error
+//   }
+
+
+// };
+
+
+
+// const [loginputs, setLoginputs] = useState({ email: "", password: "" });
+// const [isLoggedIn, setIsLoggedIn] = useState(false);
+// const [logErr, setLogErr] = useState("");
+// const navigate = useNavigate(); // Correct context for hooks
+
+// const handleSubmit = async (e) => {
+//   // Call the refactored loghandleLogin function with proper arguments
+//   loghandleLogin(e, navigate, setIsLoggedIn, login, loginputs, setLogErr);
+// };
+
+
+
+
+// const loghandleLogin = async (e, navigate, setIsLoggedIn, login, loginputs, setlogErr) => {
+//   e.preventDefault();
+//   try {
+//     // Attempt login
+//     const response = await login(loginputs);
+
+//     // Extract and decode the token
+//     const token = response.data.token || response.data.accessToken;
+//     console.log("Received token:", token); // Add this to debug token extraction
+
+//     const decodedToken = jwtDecode(token);
+//     const userType = decodedToken.type;
+//     console.log("Decoded user type:", userType); // Add this to debug user type
+
+//     console.log("Navigating to", userType === "admin" ? "/AdminPage" : "/test");
+
+//     // Navigate based on the user type
+//     if (userType === "admin") {
+//       navigate("/AdminPage");
+//     } else {
+//       navigate("/test");
+//     }
+
+//     // Update the state on successful login
+//     setIsLoggedIn(true);
+
+//   } catch (logerr) {
+//     // Handle errors
+//     setlogErr(logerr.response?.data || "An error occurred");
+//     setIsLoggedIn(false);
+//   }
+// };
+
+
+
+
+
+// LOGIN LOGIC CODE
+
+
+
+
+
+  
+
+  
+
+
+// FRONTEND TOGGLE AND BUTTONS ETC LOGIC CODE
   const containerRef = useRef(null);
   const signInRef = useRef(null);
   const RecruiterSignUpRef = useRef(null);
   const StudentSignUpRef = useRef(null); // Reference for the new "Student" button
 
   useEffect(() => {
+
+
     const container = containerRef.current;
     const signInButton = signInRef.current;
     const RecruiterSignUpButton = RecruiterSignUpRef.current;
@@ -32,12 +149,204 @@ const Meow = () => {
     RecruiterSignUpButton.addEventListener('click', handleRecruiterSignUp);
     StudentSignUpButton.addEventListener('click', handleStudentSignUp);
 
+
+
     return () => {
       signInButton.removeEventListener('click', handleSignIn);
       RecruiterSignUpButton.removeEventListener('click', handleRecruiterSignUp);
       StudentSignUpButton.removeEventListener('click', handleStudentSignUp);
     };
   }, []);
+//  FRONTEND TOGGLE AND BUTTONS ETC LOGIC CODE
+
+
+
+
+
+
+
+
+// STUDENT AND RECRUITER SIGNUP LOGIC CODE
+
+const [recruiterInputs, setRecruiterInputs] = useState({
+  username: "",
+  email: "",
+  password: "",
+  name: "",
+});
+
+const [studentInputs, setStudentInputs] = useState({
+  username: "",
+  email: "",
+  password: "",
+  name: "",
+});
+
+const [signUpError, setSignUpError] = useState(null);
+// const navigate = useNavigate();
+
+// Handle changes to the recruiter form inputs
+const handleRecruiterChange = (e) => {
+  setRecruiterInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+};
+
+// Handle changes to the student form inputs
+const handleStudentChange = (e) => {
+  setStudentInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+};
+
+// Handle recruiter sign-up form submission
+const handleRecruiterSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    // Send a POST request to the backend with the recruiter data
+    const response = await axios.post("http://localhost:8800/api/auth/register", {
+      ...recruiterInputs,
+      role: "recruiter",
+    });
+
+    // Navigate to a different page on success
+    navigate("/"); // Replace with the desired page
+
+  } catch (error) {
+    // Set the error state to display in the form
+    setSignUpError(error.response?.data || "An error occurred");
+  }
+};
+
+// Handle student sign-up form submission
+const handleStudentSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
+    // Send a POST request to the backend with the student data
+    const response = await axios.post("http://localhost:8800/api/auth/register", {
+      ...studentInputs,
+      role: "student",
+    });
+
+    // Navigate to a different page on success
+    navigate("/"); // Replace with the desired page
+
+  } catch (error) {
+    // Set the error state to display in the form
+    setSignUpError(error.response?.data || "An error occurred");
+  }
+};
+// STUDENT AND RECRUITER SIGNUP LOGIC CODE
+
+
+
+
+
+
+
+//LOGIN LOGIC CODE FOR RECRUITER, STUDENT AND ADMIN
+
+
+
+
+// const { login } = useContext(AuthContext); // Use the AuthContext for authentication
+//   const [inputs, setInputs] = useState({ email: '', password: '' }); // Combined input state
+//   const [loginError, setLoginError] = useState(null); // Track login errors
+//   const navigate = useNavigate(); // For navigation
+
+//   // Update state when inputs change
+//   const handleChange = (e) => {
+//     const { name, value } = e.target; // Get input name and value
+//     setInputs((prev) => ({ ...prev, [name]: value })); // Update input state
+//   };
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault(); // Prevent form from submitting the default way
+
+//     try {
+//       // // Attempt login using the login function from AuthContext
+//       // const user = await login(inputs);
+
+//       // // Navigate based on userType
+//       // if (user.userType === 'admin') {
+//       //   navigate('/AdminPage'); // Admin page
+//       // } else {
+//       //   navigate('/test'); // Test page for non-admins
+//       // }
+//       // const user = await login(inputs);
+//       // console.log("user in login func: ", user);
+//       await login(inputs);
+//       navigate("/test")
+
+//     } catch (err) {
+//       // Handle login errors
+//       const errorMessage = err.response?.data || 'Login failed'; // Extract error message
+//       setLoginError(errorMessage); // Set error message in state
+//     }
+//   };
+
+  
+
+
+const { login } = useContext(AuthContext); // Get login function from context
+  const [inputs, setInputs] = useState({ email: '', password: '' });
+  const navigate = useNavigate(); // Hook for navigation
+  const [loginError, setLoginError] = useState(null);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const user = await login(inputs); // Call login function and get user data
+      console.log("user after login", user);
+
+      // Navigate based on user type
+      if (user.userType === 'admin') {
+        navigate('/AdminPage'); // Admin page for admins
+      } else {
+        navigate('/test'); // Test page for students/recruiters
+      }
+    } catch (err) {
+      const errorMessage = err.response?.data || 'Login failed';
+      setLoginError(errorMessage); // Set login error message
+    }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setInputs((prev) => ({ ...prev, [name]: value }));
+  };
+
+
+
+
+
+
+
+
+
+//LOGIN LOGIC CODE FOR RECRUITER, STUDENT AND ADMIN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <>
@@ -325,55 +634,174 @@ footer a {
       {/* <h2></h2> */}
       <div className="container" ref={containerRef}>
         
+
+
+
         {/* SIGN UP AS RECRUITER */}
-        <div className="form-container sign-up-container">
-          <form action="#">
-            <h1>Create Account</h1>
-            <div className="social-container">
-              <a href="#" className="social"><i class="fab fa-facebook-f"></i></a>
-              <a href="#" className="social"><i class="fab fa-google-plus-g"></i></a>
-              <a href="#" className="social"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-            <span>or use your email for registration</span>
-            <input type="text" placeholder="Name" />
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <button>Sign Up as Recruiter</button>
+ 
+<div className="form-container sign-up-container">
+          <form onSubmit={handleRecruiterSubmit}>
+            <h1>Recruiter Sign-Up</h1>
+            <input
+              type="text"
+              placeholder="Username"
+              name="username"
+              value={recruiterInputs.username}
+              onChange={handleRecruiterChange}
+            />
+            <input
+              type="text"
+              placeholder="Email"
+              name="email"
+              value={recruiterInputs.email}
+              onChange={handleRecruiterChange}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              value={recruiterInputs.password}
+              onChange={handleRecruiterChange}
+            />
+            <input
+              type="text"
+              placeholder="Name"
+              name="name"
+              value={recruiterInputs.name}
+              onChange={handleRecruiterChange}
+            />
+            <button type="submit">Sign Up as Recruiter</button>
+            {/* {signUpError && <div>{signUpError.message}</div>}  */}
+            {/* Display error message */}
           </form>
         </div>
 
-        <div className="form-container sign-in-container">
-          <form action="#">
-            <h1>Sign In</h1>
-            <div className="social-container">
-              <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-              <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-              <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
-            </div>
-            <span>or use your account</span>
-            <input type="email" placeholder="Email" />
-            <input type="password" placeholder="Password" />
-            <a href="#">Forgot your password?</a>
-            <button>Sign In</button>
-          </form>
-        </div>
         {/* SIGN UP AS RECRUITER */}
 
 
 
-{/* SIGN UP FOR STUDENT */}
-        <div className="form-container student-sign-up-container">
-          <form action="#">
-            <h1>Student Sign Up</h1>
-            <input type="text" placeholder="Name" />
-            <input type="number" placeholder="Age" />
-            <button>Sign Up as Student</button>
-          </form>
-        </div>
-{/* SIGN UP FOR STUDENT */}
+
 
 
 {/* LOG IN */}
+{/* 
+<div className="form-container sign-in-container">
+      <form onSubmit={handleSubmit}>
+        <h1>Sign In</h1>
+        <div className="social-container">
+          <a href="#" className="social"><i className="fab fa-facebook-f"></i></a>
+          <a href="#" className="social"><i className="fab fa-google-plus-g"></i></a>
+          <a href="#" className="social"><i className="fab fa-linkedin-in"></i></a>
+        </div>
+        <span>or use your account</span>
+        
+        <input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)} // Update email state
+        />
+        
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)} // Update password state
+        />
+
+        <a href="#">Forgot your password?</a>
+
+        <button type="submit">Sign In</button> // Submit the form
+
+        
+        {loginError && <div>{loginError}</div>}
+      </form>
+    </div> */}
+
+
+<div className="form-container sign-in-container">
+      <form onSubmit={handleSubmit}> 
+        <h1>Sign In</h1>
+
+        <input
+          type="email"
+          name="email" // Use name to map to inputs state
+          placeholder="Email"
+          value={inputs.email} // Get value from inputs state
+          onChange={handleChange} // Use handleChange to update state
+        />
+
+        <input
+          type="password"
+          name="password" // Use name to map to inputs state
+          placeholder="Password"
+          value={inputs.password} // Get value from inputs state
+          onChange={handleChange} // Use handleChange to update state
+        />
+
+        <button type="submit">Sign In</button> 
+
+        {/* Display login error if any */}
+        {loginError && <div style={{ color: 'red' }}>{loginError}</div>} 
+      </form>
+    </div>
+
+{/* LOG IN */}
+       
+
+
+
+
+
+
+
+{/* SIGN UP FOR STUDENT */}
+
+
+<div className="form-container student-sign-up-container">
+          <form onSubmit={handleStudentSubmit}>
+            <h1>Student Sign-Up</h1>
+            <input
+              type="text"
+              placeholder="Username"
+              name="username"
+              value={studentInputs.username}
+              onChange={handleStudentChange}
+            />
+            <input
+              type="text"
+              placeholder="Email"
+              name="email"
+              value={studentInputs.email}
+              onChange={handleStudentChange}
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              name="password"
+              value={studentInputs.password}
+              onChange={handleStudentChange}
+            />
+            <input
+              type="text"
+              placeholder="Name"
+              name="name"
+              value={studentInputs.name}
+              onChange={handleStudentChange}
+            />
+            <button type="submit">Sign Up as Student</button>
+            {/* {signUpError && <div>{signUpError.errorMessage}</div>}  */}
+            {/* Display error message */}
+          </form>
+        </div>
+
+{/* SIGN UP FOR STUDENT */}
+
+
+
+
+
+{/* LEFT SIDE PAGE FOR GOING TO LOGIN PAGE */}
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
@@ -390,7 +818,11 @@ footer a {
             </div>
           </div>
         </div>
-{/* LOG IN */}
+{/* LEFT SIDE PAGE FOR GOING TO LOGIN PAGE */}
+
+
+
+
 
 
 

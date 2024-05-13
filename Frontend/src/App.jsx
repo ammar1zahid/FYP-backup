@@ -30,7 +30,8 @@ function App() {
          
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Login/>}></Route> 
+          {/* <Route path="/" element={<Login/>}></Route>  */}
+          <Route path="/" element={<Meow/>}></Route>
           <Route path="/register" element={<Register/>}></Route>  
           <Route path="/test" element={<Test/>}></Route>  
           <Route path="/profile/:userId" element={<ProfilePage/>}></Route>
@@ -41,7 +42,7 @@ function App() {
           <Route path="/PortfolioPage" element={<PorfolioPage/>}></Route>
           <Route path="/EditablePortfolio" element={<EditablePortfolio/>}></Route>    
           <Route path="/AdminPage" element={<AdminPage/>}></Route>
-          <Route path="/Meow" element={<Meow/>}></Route>
+          {/* <Route path="/Meow" element={<Meow/>}></Route> */}
           
         </Routes>
       </BrowserRouter>

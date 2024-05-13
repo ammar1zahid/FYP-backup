@@ -12,6 +12,7 @@ import relationshipRoutes from "./routes/relationships.js";
 import storiesRoutes from "./routes/storiesRoutes.js"
 import cvRoutes from "./routes/cv.js"
 import portfolioRoutes from "./routes/portfolio.js"
+import adminworkRoutes from "./routes/adminwork.js"
 import $ from 'jquery';
 
 //middlewares
@@ -77,6 +78,9 @@ app.post("/api/upload", upload.single("file"), (req, res) => {
  app.use("/api/portfolio", portfolioRoutes);
 
  app.use("/api/cv", cvRoutes)
+
+ app.use("/api/adminwork", adminworkRoutes)
+
 
 app.listen(8800, () => {
   console.log("API working!");

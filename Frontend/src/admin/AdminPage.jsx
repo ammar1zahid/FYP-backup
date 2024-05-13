@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 // import './adminPage.css'; // Include CSS styles
+import AdminsTableCrud from './AdminsTableCrud';
 
 function AdminPage() {
   const [activeTab, setActiveTab] = useState('tab1'); // State to manage the active tab
@@ -28,17 +29,17 @@ function AdminPage() {
   }
   
   .admin-panel {
-    width: 100%;
-    max-width: 900px;
-    margin: 50px auto;
-    overflow: hidden;
-    background-color: #fff;
+    width: 100%; /* Set width to 100% */
+        height: 100vh; /* Set height to 100% of viewport height */
+        overflow: hidden;
+        background-color: #f1f1f1; /* Set background color to match body */
   }
   
   .slidebar {
     width: 15%;
     float: left;
     background-color: #111;
+    height: 100%; /* Adjust height to match .admin-panel */
   }
   
   .slidebar ul {
@@ -79,6 +80,7 @@ function AdminPage() {
     width: 85%;
     float: left;
     background-color: rgb(255, 255, 255);
+    height: 100%; /* Adjust height to match .admin-panel */
   }
   
   .main h2 {
@@ -113,7 +115,7 @@ function AdminPage() {
             onClick={(e) => handleTabClick(e, 'tab2')}
           >
             <a href="">
-              <i className="fa fa-eyedropper"></i>Styling
+              <i className="fa fa-eyedropper"></i>Admin Table
             </a>
           </li>
           <li
@@ -151,6 +153,8 @@ function AdminPage() {
         </ul>
       </div>
 
+
+
       <div className="main">
         <div
           id="tab1"
@@ -165,7 +169,9 @@ function AdminPage() {
           id="tab2"
           style={{ display: activeTab === 'tab2' ? 'block' : 'none' }}
         >
-          <h2 className="header">Styling</h2>
+          <h2 className="header">Admin Table</h2>
+
+          <AdminsTableCrud />
 
           
         </div>
