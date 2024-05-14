@@ -5,45 +5,177 @@ function AdminsTableCrud() {
 
 
 
-    const initialRows = [
-        { name: 'John Doe', department: 'Administration', phone: '(171) 555-2222' },
-        { name: 'Peter Parker', department: 'Customer Service', phone: '(313) 555-5735' },
-        { name: 'Fran Wilson', department: 'Human Resources', phone: '(503) 555-9931' }
-    ];
+    // const initialRows = [
+
+    // ];
+
+    // const [rows, setRows] = useState(initialRows);
+    // const [editingIndex, setEditingIndex] = useState(-1);
+    // const [newRow, setNewRow] = useState({ name: '', department: '', phone: '' });
+
+    // const [isAdding, setIsAdding] = useState(false);
+
+    // const handleAddRow = () => {
+    //     setRows([...rows, newRow]);
+    //     setNewRow({ name: '', department: '', phone: '' });
+    //     setEditingIndex(rows.length); // Set the editingIndex to the index of the newly added row
+    // };
+
+    // const handleCancelAddRow = () => {
+    //     setNewRow({ name: '', department: '', phone: '' });
+    // };
+
+    // const handleSaveRow = (index) => {
+    //     const newRow = { ...rows[index] };
+    //     // Save the row data here, you can send it to your backend or do something else
+    //     setIsAdding(false);
+    // };
+
+    // const handleEditRow = (index) => {
+    //     // Implement row editing functionality
+    //     setEditingIndex(index);
+        
+    // };
+
+    // const handleDeleteRow = (index) => {
+    //     const updatedRows = [...rows];
+    //     updatedRows.splice(index, 1);
+    //     setRows(updatedRows);
+    // };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const initialRows = [];
 
     const [rows, setRows] = useState(initialRows);
     const [editingIndex, setEditingIndex] = useState(-1);
-    const [newRow, setNewRow] = useState({ name: '', department: '', phone: '' });
-
+    const [newRow, setNewRow] = useState({ email: '', password: '' });
     const [isAdding, setIsAdding] = useState(false);
 
     const handleAddRow = () => {
-        setRows([...rows, newRow]);
-        setNewRow({ name: '', department: '', phone: '' });
+        setNewRow({ email: '', password: '' });
+        setIsAdding(true);
         setEditingIndex(rows.length); // Set the editingIndex to the index of the newly added row
     };
 
     const handleCancelAddRow = () => {
-        setNewRow({ name: '', department: '', phone: '' });
+        setNewRow({ email: '', password: '' });
+        setIsAdding(false);
+        setEditingIndex(-1);
     };
 
     const handleSaveRow = (index) => {
-        const newRow = { ...rows[index] };
-        // Save the row data here, you can send it to your backend or do something else
-        setIsAdding(false);
+        const newAdmin = { ...newRow };
+
+        // Make POST request to addAdmin API
+        fetch('http://localhost:8800/api/adminwork/addAdmin', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(newAdmin),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data === "Admin added successfully!") {
+                    // Fetch the updated list of admins
+                    fetch('http://localhost:8800/api/adminwork/getAllAdmins')
+                        .then(response => response.json())
+                        .then(data => {
+                            setRows(data);
+                            setNewRow({ email: '', password: '' });
+                            setEditingIndex(-1);
+                            setIsAdding(false);
+                        })
+                        .catch(error => console.error('Error fetching data:', error));
+                } else {
+                    console.error('Error adding admin:', data);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
     };
 
+
     const handleEditRow = (index) => {
-        // Implement row editing functionality
         setEditingIndex(index);
-        
+        setNewRow(rows[index]);
     };
+
+
+// NEW CODE PIECE
+
+const handleUpdateRow = (index) => {
+    const updatedAdmin = { ...rows[index], ...newRow };
+
+    // Make POST request to updateAdmin API
+    fetch('http://localhost:8800/api/adminwork/updateAdmin', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedAdmin),
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data === "Admin updated successfully!") {
+                // Fetch the updated list of admins
+                fetch('http://localhost:8800/api/adminwork/getAllAdmins')
+                    .then(response => response.json())
+                    .then(data => {
+                        setRows(data);
+                        setNewRow({ email: '', password: '' });
+                        setEditingIndex(-1);
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            } else {
+                console.error('Error updating admin:', data);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+};
+// NEW CODE PIECE
+
+
+
+
+
+
+
+
+
+
+
+
 
     const handleDeleteRow = (index) => {
         const updatedRows = [...rows];
         updatedRows.splice(index, 1);
         setRows(updatedRows);
     };
+
+
+
 
 
 
@@ -66,6 +198,8 @@ function AdminsTableCrud() {
     
 
   return (
+
+    <>
     <div>
   <meta charSet="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -106,36 +240,23 @@ function AdminsTableCrud() {
 
 
 
-                        {/* <tbody>
-                            {rows.map((row, index) => (
-                                <tr key={index}>
-                                    <td>{editingIndex === index ? <input type="text" defaultValue={row.name} style={{ width: '100%' }}/> : row.name}</td>
-                                    <td>{editingIndex === index ? <input type="text" defaultValue={row.department} style={{ width: '100%' }}/> : row.department}</td>
-                                    <td>{editingIndex === index ? <input type="text" defaultValue={row.phone} style={{ width: '100%' }}/> : row.phone}</td>
-                                    <td>
-                                        {editingIndex === index ? (
-                                            <React.Fragment>
-                                                <button className="btn btn-success" onClick={() => handleSaveRow(index)}>Save</button>
-                                                <button className="btn btn-secondary" onClick={() => setEditingIndex(-1)}>Cancel</button>
-                                            </React.Fragment>
-                                        ) : (
-                                            <React.Fragment>
-                                                <a className="edit" title="Edit" ><i className="material-icons" onClick={() => handleEditRow(index)} ></i></a>
-                                                <a className="delete" title="Delete" ><i className="material-icons" onClick={() => handleDeleteRow(index)} ></i></a>
-                                            </React.Fragment>
-                                        )}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody> */}
-
-
+{/* 
 <tbody>
     {rows.map((row, index) => (
         <tr key={index}>
             <td>{editingIndex === index ? <input type="text" defaultValue={row.idadmins} style={{ width: '100%' }}/> : row.idadmins}</td>
             <td>{editingIndex === index ? <input type="text" defaultValue={row.email} style={{ width: '100%' }}/> : row.email}</td>
-            <td>{editingIndex === index ? <input type="text" defaultValue={row.password} style={{ width: '100%' }}/> : row.password}</td>
+            
+
+            <td>
+    {editingIndex === index ? (
+        <input type="text" defaultValue={row.password} style={{ width: '100%' }}/>
+    ) : (
+        <span style={{ display: 'inline-block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+            {row.password.replace(/./g, '*')}
+        </span>
+    )}
+</td>
             <td>
                 {editingIndex === index ? (
                     <React.Fragment>
@@ -151,7 +272,105 @@ function AdminsTableCrud() {
             </td>
         </tr>
     ))}
-</tbody>
+</tbody> */}
+
+
+
+
+{/* GOOD CODE */}
+<tbody>
+                                {rows.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.idadmins}</td>
+                                        <td>{row.email}</td>
+                                        <td>
+                                            <span style={{ display: 'inline-block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>
+                                                {row.password.replace(/./g, '*')}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {editingIndex === index ? (
+                                                <React.Fragment>
+                                                    <button className="btn btn-success" onClick={() => handleSaveRow(index)}>Save</button>
+                                                    <button className="btn btn-secondary" onClick={() => setEditingIndex(-1)}>Cancel</button>
+                                                </React.Fragment>
+                                            ) : (
+                                                <React.Fragment>
+                                                    <a className="edit" title="Edit"><i className="material-icons" onClick={() => handleEditRow(index)}></i></a>
+                                                    <a className="delete" title="Delete"><i className="material-icons" onClick={() => handleDeleteRow(index)}></i></a>
+                                                </React.Fragment>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                                {isAdding && (
+                                    <tr>
+                                        <td>New</td>
+                                        <td>
+                                            <input
+                                                type="text"
+                                                value={newRow.email}
+                                                onChange={(e) => setNewRow({ ...newRow, email: e.target.value })}
+                                                style={{ width: '100%' }}
+                                            />
+                                        </td>
+                                        <td>
+                                            <input
+                                                type="password"
+                                                value={newRow.password}
+                                                onChange={(e) => setNewRow({ ...newRow, password: e.target.value })}
+                                                style={{ width: '100%' }}
+                                            />
+                                        </td>
+                                        <td>
+                                            <button className="btn btn-success" onClick={() => handleSaveRow(editingIndex)}>Save</button>
+                                            <button className="btn btn-secondary" onClick={handleCancelAddRow}>Cancel</button>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+
+
+
+{/* EDIT PART CODE, NOT WORKING PROPERLY */}
+
+{/* <tbody>
+                                {rows.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.idadmins}</td>
+                                        <td>{editingIndex === index ? <input type="text" defaultValue={row.email} onChange={(e) => setNewRow({ ...newRow, email: e.target.value })} /> : row.email}</td>
+                                        <td>{editingIndex === index ? <input type="text" defaultValue={row.password} onChange={(e) => setNewRow({ ...newRow, password: e.target.value })} /> : '******'}</td>
+                                        <td>
+                                            {editingIndex === index ? (
+                                                <>
+                                                    <a className="add" onClick={() => handleUpdateRow(index)} title="Save" data-toggle="tooltip"><i className="material-icons">save</i></a>
+                                                    <a className="cancel" onClick={() => setEditingIndex(-1)} title="Cancel" data-toggle="tooltip"><i className="material-icons">cancel</i></a>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <a className="edit" onClick={() => handleEditRow(index)} title="Edit" data-toggle="tooltip"><i className="material-icons">edit</i></a>
+                                                    <a className="delete" onClick={() => handleDeleteRow(index)} title="Delete" data-toggle="tooltip"><i className="material-icons">delete</i></a>
+                                                </>
+                                            )}
+                                        </td>
+                                    </tr>
+                                ))}
+                                {isAdding && (
+                                    <tr>
+                                        <td>{rows.length + 1}</td>
+                                        <td><input type="text" value={newRow.email} onChange={(e) => setNewRow({ ...newRow, email: e.target.value })} /></td>
+                                        <td><input type="text" value={newRow.password} onChange={(e) => setNewRow({ ...newRow, password: e.target.value })} /></td>
+                                        <td>
+                                            <a className="add" onClick={() => handleSaveRow()} title="Save" data-toggle="tooltip"><i className="material-icons">save</i></a>
+                                            <a className="cancel" onClick={handleCancelAddRow} title="Cancel" data-toggle="tooltip"><i className="material-icons">cancel</i></a>
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody> */}
+                            
+
+
+
 
 
 
@@ -165,6 +384,8 @@ function AdminsTableCrud() {
         </div>
 
 </div>
+
+</>
   )
 }
 

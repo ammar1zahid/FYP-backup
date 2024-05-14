@@ -47,5 +47,56 @@ export const getAllAdmins = (req, res) => {
   });
 };
 
+
+
+
+
+
+// Function to hash the password
+const hashPassword = (password) => {
+  return bcrypt.hashSync(password, 10); // Hash the password with salt rounds of 10
+};
+
+// Example query to insert data into the admins table
+export const addAdmin = (req, res) => {
+  const { email, password } = req.body;
+  const hashedPassword = hashPassword(password); // Hash the password before inserting
+  
+  const query = "INSERT INTO admins (email, password) VALUES (?, ?)";
+  db.query(query, [email, hashedPassword], (err, result) => {
+    if (err) {
+      return res.status(500).json(err); // Handle query errors
+    }
+    
+    return res.status(200).json("Admin added successfully!"); // Successful insertion
+  });
+};
+
+
+
+
+// Function to hash the password
+// const hashPassword = (password) => {
+//   return bcrypt.hashSync(password, 10); // Hash the password with salt rounds of 10
+// };
+
+// Example query to update data in the admins table
+export const updateAdmin = (req, res) => {
+  const { idadmins, email, password } = req.body;
+  const hashedPassword = hashPassword(password); // Hash the password before updating
+
+  const query = "UPDATE admins SET email = ?, password = ? WHERE idadmins = ?";
+  db.query(query, [email, hashedPassword, idadmins], (err, result) => {
+      if (err) {
+          return res.status(500).json(err); // Handle query errors
+      }
+
+      return res.status(200).json("Admin updated successfully!"); // Successful update
+  });
+};
+
+
+
+
 // ADMIN TABLE CRUD APIS
 

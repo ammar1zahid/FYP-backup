@@ -3,7 +3,9 @@ import {
 
     addToUniDomains,
 
-    getAllAdmins
+    getAllAdmins,
+    addAdmin,
+    updateAdmin
 
 
 
@@ -14,7 +16,10 @@ import {
 const router = express.Router()
 
  router.post("/addToUniDomains", addToUniDomains)
+
  router.get('/getAllAdmins', getAllAdmins);
+ router.post("/addAdmin", addAdmin)
+ router.post("/updateAdmin", updateAdmin)
 
 
 
